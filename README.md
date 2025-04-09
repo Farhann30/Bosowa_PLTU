@@ -20,10 +20,7 @@ Pastikan komputer Anda telah memiliki:
 
 ## Struktur Branch
 
-- `main` - Branch produksi, hanya untuk kode yang sudah siap production
-- `development` - Branch utama untuk pengembangan
-- `feature/*` - Branch untuk fitur baru (contoh: `feature/login-page`)
-- `bugfix/*` - Branch untuk perbaikan bug
+- `master` - Branch produksi, hanya untuk kode yang sudah siap production
 - `[nama-developer]` - Branch personal untuk masing-masing developer
 
 ## Setup Proyek
