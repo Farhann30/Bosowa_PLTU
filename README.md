@@ -2,6 +2,15 @@
 
 Aplikasi buku tamu digital menggunakan Laravel 10, React, dan MySQL.
 
+## Persyaratan Sistem
+
+Pastikan komputer Anda telah memiliki:
+- PHP >= 8.1
+- Composer
+- Node.js >= 16
+- MySQL >= 5.7
+- Git
+
 ## Teknologi yang Digunakan
 
 - Backend: Laravel 10
@@ -19,37 +28,124 @@ Aplikasi buku tamu digital menggunakan Laravel 10, React, dan MySQL.
 
 ## Setup Proyek
 
-1. Clone repository
+### 1. Clone Repository
 ```bash
-git clone [URL_REPOSITORY]
+git clone https://github.com/Farhann30/Bosowa_PLTU.git
 cd guestbook
 ```
 
-2. Install dependencies
+### 2. Install Dependencies Backend
 ```bash
 composer install
+```
+
+### 3. Install Dependencies Frontend
+```bash
 npm install
 ```
 
-3. Setup environment
+### 4. Setup Environment
 ```bash
+# Copy file environment
 cp .env.example .env
+
+# Generate application key
 php artisan key:generate
 ```
 
-4. Setup database
-- Buat database MySQL baru
-- Update file .env dengan kredensial database
+### 5. Setup Database
 
-5. Jalankan migrasi
+#### Menggunakan XAMPP:
+1. Buka XAMPP Control Panel
+2. Start Apache dan MySQL
+3. Buka phpMyAdmin (http://localhost/phpmyadmin)
+4. Buat database baru bernama `guestbook`
+5. Edit file `.env`:
+   ```
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=guestbook
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
+
+#### Menggunakan MySQL Command Line:
+```bash
+# Login ke MySQL
+mysql -u root -p
+
+# Di dalam MySQL CLI:
+CREATE DATABASE guestbook;
+CREATE USER 'guestbook_team'@'localhost' IDENTIFIED BY 'password_anda';
+GRANT ALL PRIVILEGES ON guestbook.* TO 'guestbook_team'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+Kemudian edit file `.env`:
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=guestbook
+DB_USERNAME=guestbook_team
+DB_PASSWORD=password_anda
+```
+
+### 6. Jalankan Migrasi Database
 ```bash
 php artisan migrate
 ```
 
-6. Jalankan aplikasi
+### 7. Build Assets
 ```bash
-php artisan serve
+# Untuk development
 npm run dev
+
+# Untuk production
+npm run build
+```
+
+### 8. Jalankan Aplikasi
+```bash
+# Jalankan server Laravel
+php artisan serve
+
+# Dalam terminal terpisah, jalankan Vite (jika dalam mode development)
+npm run dev
+```
+
+Aplikasi akan tersedia di:
+- Frontend (development): http://localhost:5173
+- Backend: http://localhost:8000
+
+## Troubleshooting
+
+### 1. Masalah Database
+Jika terjadi error "Connection refused":
+- Pastikan MySQL sudah running
+- Cek kredensial di file `.env`
+- Pastikan database sudah dibuat
+- Cek firewall tidak memblokir port 3306
+
+### 2. Masalah Frontend
+Jika halaman blank/putih:
+```bash
+# Hapus node_modules dan reinstall
+rm -rf node_modules
+npm install
+
+# Build ulang assets
+npm run build
+```
+
+### 3. Cache Laravel
+Jika ada masalah dengan route atau config:
+```bash
+php artisan config:clear
+php artisan cache:clear
+php artisan route:clear
+php artisan view:clear
 ```
 
 ## Panduan Kontribusi
@@ -80,6 +176,23 @@ git push origin [nama-branch]
 - [Nama Anggota Tim 1]
 - [Nama Anggota Tim 2]
 - dst.
+
+## Struktur Folder Penting
+
+```
+resources/js/Pages/
+├── Auth/                    # Halaman-halaman autentikasi
+│   ├── Login.jsx           # Halaman login
+│   └── Register.jsx        # Halaman registrasi
+│
+├── Guest/                   # Halaman-halaman buku tamu
+│   ├── Homepage.jsx        # Dashboard/Beranda
+│   ├── ListVisit.jsx       # Daftar kunjungan
+│   └── AddVisit.jsx        # Form tambah kunjungan
+│
+└── Profile/                # Halaman-halaman profil
+    └── Edit.jsx           # Edit profil pengguna
+```
 
 ## Lisensi
 

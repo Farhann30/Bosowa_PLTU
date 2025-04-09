@@ -20,15 +20,21 @@ Route::get('/', function () {
     return Inertia::render('Auth/Login');
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::get('/guest-book', function () {
-    return Inertia::render('GuestBook');
-})->middleware(['auth'])->name('guest-book');
-
 Route::middleware('auth')->group(function () {
+    // Guest Book Routes
+    Route::get('/dashboard', function () {
+        return Inertia::render('Guest/Homepage');
+    })->name('dashboard');
+
+    Route::get('/visits', function () {
+        return Inertia::render('Guest/ListVisit');
+    })->name('visits.index');
+
+    Route::get('/visits/create', function () {
+        return Inertia::render('Guest/AddVisit');
+    })->name('visits.create');
+
+    // Profile Routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
