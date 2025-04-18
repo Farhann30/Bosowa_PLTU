@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use Inertia\Inertia;  // Pastikan ini ada
 
 /*
 |--------------------------------------------------------------------------
@@ -17,8 +17,16 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Auth/Login');
+    return Inertia::render('Index', [
+        'auth' => [
+            'user' => Auth::user(),
+        ],
+    ]);
 });
+
+Route::get('/login', function () {
+    return Inertia::render('Auth/Login');
+})->name('login');
 
 Route::middleware('auth')->group(function () {
     // Guest Book Routes
