@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VisitController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;  // Pastikan ini ada
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,28 +20,22 @@ use Inertia\Inertia;  // Pastikan ini ada
 Route::get('/', function () {
     return Inertia::render('Index', [
         'auth' => [
-            'user' => Auth::user(),
+            'user' => auth()->user(),
         ],
     ]);
 });
 
-Route::get('/login', function () {
-    return Inertia::render('Auth/Login');
-})->name('login');
-
 Route::middleware('auth')->group(function () {
-    // Guest Book Routes
     Route::get('/dashboard', function () {
         return Inertia::render('Guest/Homepage');
-    })->name('dashboard');
+    })->middleware(['verified'])->name('dashboard');
 
-    Route::get('/visits', function () {
-        return Inertia::render('Guest/ListVisit');
-    })->name('visits.index');
-
-    Route::get('/visits/create', function () {
-        return Inertia::render('Guest/AddVisit');
-    })->name('visits.create');
+    // Visit routes
+    Route::controller(VisitController::class)->group(function () {
+        Route::get('/visits', 'index')->name('visits.index');
+        Route::get('/visits/create', 'create')->name('visits.create');
+        Route::post('/visits', 'store')->name('visits.store');
+    });
 
     // Profile Routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
