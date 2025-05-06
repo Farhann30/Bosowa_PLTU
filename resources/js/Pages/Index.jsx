@@ -19,10 +19,10 @@ export default function Welcome({ auth }) {
                         ) : (
                             <>
                                 <Link href={route('register')} className="text-white hover:underline">
-                                    Sign Up
+                                    Daftar
                                 </Link>
                                 <Link href={route('login')} className="bg-red-600 text-white px-6 py-2 rounded-md">
-                                    Login
+                                    Masuk
                                 </Link>
                             </>
                         )}
