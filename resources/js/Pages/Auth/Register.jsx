@@ -33,7 +33,7 @@ export default function Register() {
                 <div className="w-full max-w-md bg-white rounded-lg p-8">
                     <div className="text-left mb-8">
                         <img src="/images/logo BSW.png" alt="BSW Logo" className="w-24 mb-4" />
-                        <h1 className="text-2xl font-bold text-gray-900">Daftar Akun</h1>
+                        <h1 className="text-2xl font-bold text-gray-900">Daftar</h1>
                         <p className="text-gray-600 mt-2">Buat akun baru untuk mengakses buku tamu</p>
                     </div>
 
