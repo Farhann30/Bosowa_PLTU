@@ -9,13 +9,16 @@ use Inertia\Inertia;
 
 class VisitController extends Controller
 {
+    // Halaman untuk menampilkan form create
     public function create()
     {
         return Inertia::render('Visit/Create');
     }
 
+    // Halaman untuk menampilkan daftar kunjungan
     public function index()
     {
+        // Ambil data visit yang terkait dengan user yang sedang login
         $visits = Visit::where('user_id', auth()->id())
             ->orderBy('created_at', 'desc')
             ->get()
@@ -37,16 +40,19 @@ class VisitController extends Controller
                 ];
             });
 
+        // Kirim data visit ke Inertia view
         return Inertia::render('Visit/List', [
             'visits' => $visits
         ]);
     }
 
+    // Menyimpan kunjungan baru
     public function store(Request $request)
     {
         Log::info('Received visit data:', $request->all());
 
         try {
+            // Pesan kesalahan
             $messages = [
                 'required' => ':attribute harus diisi.',
                 'date' => ':attribute harus berupa tanggal yang valid.',
@@ -54,6 +60,7 @@ class VisitController extends Controller
                 'accepted' => ':attribute harus disetujui.',
             ];
 
+            // Nama atribut untuk kesalahan
             $attributes = [
                 'visit_date' => 'Tanggal kunjungan',
                 'visit_time_start' => 'Waktu mulai',
@@ -67,6 +74,7 @@ class VisitController extends Controller
                 'agreement' => 'Persetujuan'
             ];
 
+            // Validasi data kunjungan
             $validated = $request->validate([
                 'visit_date' => 'required|date',
                 'visit_time_start' => 'required',
@@ -81,30 +89,32 @@ class VisitController extends Controller
                 'agreement' => 'required|accepted'
             ], $messages, $attributes);
 
-            Log::info('Validated data:', $validated);
-
-            // Hapus agreement dari data yang akan disimpan
+            // Hapus 'agreement' dari data yang akan disimpan
             unset($validated['agreement']);
-            
-            // Tambahkan user_id dan status
+
+            // Menambahkan user_id dan status
             $validated['user_id'] = auth()->id();
             $validated['status'] = 'pending';
 
+            // Menyimpan kunjungan baru
             $visit = Visit::create($validated);
             Log::info('Visit created:', $visit->toArray());
 
+            // Redirect ke halaman daftar kunjungan dengan pesan sukses
             return redirect()->route('visits.index')
                 ->with('success', 'Kunjungan berhasil dibuat!');
-
         } catch (\Illuminate\Validation\ValidationException $e) {
+            // Jika validasi gagal
             Log::error('Validation error:', $e->errors());
             throw $e;
         } catch (\Exception $e) {
+            // Jika terjadi kesalahan saat menyimpan
             Log::error('Error creating visit:', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
             
+            // Kembali dengan pesan kesalahan
             return back()
                 ->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()])
                 ->withInput();
