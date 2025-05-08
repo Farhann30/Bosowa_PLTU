@@ -32,9 +32,49 @@ export default function Create({ auth }) {
         setCurrentStep(currentStep - 1);
     };
 
-    const submit = (e) => {
+    const submit = (e) => { //error msg
         e.preventDefault();
-        console.log('Form Data:', data); // Tambah logging
+    
+        const validationErrors = [];
+    
+        if (!data.phone || data.phone.trim() === '') {
+            validationErrors.push('Tolong isi nomor telepon anda');
+        }
+
+        if (!data.visit_date || data.visit_date.trim() === '') {
+            validationErrors.push('Tolong isi tanggal kunjungan');
+
+        }
+        if (!data.visit_time_end || data.visit_time_end.trim() === '') {
+            validationErrors.push('Tolong isi jam selesai kunjungan');
+
+        }
+        if (!data.visit_time_start || data.visit_time_start.trim() === '') {
+            validationErrors.push('Tolong isi jam mulai kunjungan');
+
+        }
+        if (!data.agenda|| data.agenda.trim() === '') {
+            validationErrors.push('Tolong isi agenda kunjungan');    
+        }
+        if (!data.email || data.email.trim() === '') {
+            validationErrors.push('Tolong isi Nama PIC');
+        }
+        if (!data.building_type || data.building_type.trim() === '') {
+            validationErrors.push('Tolong isi tipe bangunan');
+        }
+        if (!data.email || data.email.trim() === '') {
+            validationErrors.push('Tolong isi email anda');
+        }
+    
+        if (!data.agreement) {
+            validationErrors.push('Anda harus menyetujui persyaratan');
+        }
+    
+        if (validationErrors.length > 0) {
+            alert(validationErrors.join('\n'));
+            return;
+        }
+    
         post(route('visits.store'), {
             onSuccess: () => {
                 console.log('Success submitting data');
@@ -46,6 +86,7 @@ export default function Create({ auth }) {
             preserveScroll: true,
         });
     };
+    
 
     const renderStep1 = () => (
         <div className="space-y-6">
@@ -170,6 +211,7 @@ export default function Create({ auth }) {
                     type="text"
                     className="mt-1 block w-full"
                     placeholder="Nama PIC"
+                    required
                 />
                 {errors.meet_with && (
                     <p className="text-sm text-red-600 mt-1">{errors.meet_with}</p>
@@ -195,7 +237,7 @@ export default function Create({ auth }) {
 
     const renderStep3 = () => (
         <div className="space-y-6">
-            <h2 className="text-xl font-semibold">Pilih Asset</h2>
+            <h2 className="text-xl font-semibold">Upload KTP</h2>
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
                 <div className="flex justify-center">
                     <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
@@ -203,13 +245,44 @@ export default function Create({ auth }) {
                     </svg>
                 </div>
                 <div className="mt-4">
-                    <button
-                        type="button"
-                        className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                        Upload File
-                    </button>
+                    <form action= "" method= "get">
+                        <label for="ktp"></label>
+                        
+                        
+                            <button
+                    
+                        
+                                type="button"
+                                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                               <input type='file'/>
+                            </button>
+                    </form> 
                 </div>
+            </div>
+            <div><h2 className="text-xl font-semibold">Upload Pas Foto</h2></div>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
+            <div className="flex justify-center">
+                    <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                </div>
+                <div className="mt-4">
+                <form action= "" method= "get">z
+                        <label for="PAS FOTO"></label>
+                        
+                        
+                            <button
+                    
+                        
+                                type="button"
+                                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                               <input type='file'/>
+                            </button>
+                    </form> 
+                </div>
+                
             </div>
         </div>
     );
@@ -321,6 +394,7 @@ export default function Create({ auth }) {
                                     
                                     {currentStep < 4 ? (
                                         <button
+                                            disabled={processing || !data}
                                             type="button"
                                             onClick={nextStep}
                                             className="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150"
