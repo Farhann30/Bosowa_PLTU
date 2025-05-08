@@ -43,25 +43,28 @@ export default function Create({ auth }) {
 
         if (!data.visit_date || data.visit_date.trim() === '') {
             validationErrors.push('Tolong isi tanggal kunjungan');
-
         }
+        
         if (!data.visit_time_end || data.visit_time_end.trim() === '') {
             validationErrors.push('Tolong isi jam selesai kunjungan');
-
         }
+        
         if (!data.visit_time_start || data.visit_time_start.trim() === '') {
             validationErrors.push('Tolong isi jam mulai kunjungan');
-
         }
+
         if (!data.agenda|| data.agenda.trim() === '') {
             validationErrors.push('Tolong isi agenda kunjungan');    
         }
+
         if (!data.email || data.email.trim() === '') {
             validationErrors.push('Tolong isi Nama PIC');
         }
+
         if (!data.building_type || data.building_type.trim() === '') {
             validationErrors.push('Tolong isi tipe bangunan');
         }
+        
         if (!data.email || data.email.trim() === '') {
             validationErrors.push('Tolong isi email anda');
         }
@@ -86,7 +89,6 @@ export default function Create({ auth }) {
             preserveScroll: true,
         });
     };
-    
 
     const renderStep1 = () => (
         <div className="space-y-6">
@@ -247,11 +249,7 @@ export default function Create({ auth }) {
                 <div className="mt-4">
                     <form action= "" method= "get">
                         <label for="ktp"></label>
-                        
-                        
                             <button
-                    
-                        
                                 type="button"
                                 className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
@@ -268,13 +266,9 @@ export default function Create({ auth }) {
                     </svg>
                 </div>
                 <div className="mt-4">
-                <form action= "" method= "get">z
+                <form action= "" method= "get">
                         <label for="PAS FOTO"></label>
-                        
-                        
                             <button
-                    
-                        
                                 type="button"
                                 className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
@@ -291,7 +285,7 @@ export default function Create({ auth }) {
         <div className="space-y-6">
             <h2 className="text-xl font-semibold">Info Pribadi</h2>
             <div>
-                <InputLabel htmlFor="phone" value="No Telepon Saya (PIC)" />
+                <InputLabel htmlFor="phone" value="No Telepon Saya" />
                 <TextInput
                     id="phone"
                     type="tel"
@@ -306,7 +300,7 @@ export default function Create({ auth }) {
             </div>
 
             <div>
-                <InputLabel htmlFor="email" value="Email Saya (PIC)" />
+                <InputLabel htmlFor="email" value="Email Saya" />
                 <TextInput
                     id="email"
                     type="email"
