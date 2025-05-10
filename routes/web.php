@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PicController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // PIC Routes
+    Route::middleware(['auth', 'role:pic'])->group(function () {
+        Route::get('/pic/dashboard', [PicController::class, 'dashboard'])->name('pic.dashboard');
+        Route::post('/api/visits/{visit}/approve', [PicController::class, 'approve'])->name('visits.approve');
+        Route::post('/api/visits/{visit}/reject', [PicController::class, 'reject'])->name('visits.reject');
+    });
 });
 
 Route::middleware(['auth', 'admin'])->get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');

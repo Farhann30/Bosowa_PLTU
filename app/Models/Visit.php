@@ -10,17 +10,17 @@ class Visit extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
+        'pic_id',
         'visit_date',
         'visit_time_start',
         'visit_time_end',
         'building_type',
         'building_category',
         'agenda',
-        'meet_with',
         'notes',
         'phone',
         'email',
-        'user_id',
         'status'
     ];
 
@@ -31,5 +31,10 @@ class Visit extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function pic()
+    {
+        return $this->belongsTo(Pic::class);
     }
 }

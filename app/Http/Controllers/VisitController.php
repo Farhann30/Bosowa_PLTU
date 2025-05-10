@@ -6,6 +6,9 @@ use App\Models\Visit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use App\Mail\VisitNotification;
+use Illuminate\Support\Facades\Mail;
+use App\Models\Pic;
 
 class VisitController extends Controller
 {
@@ -18,12 +21,11 @@ class VisitController extends Controller
     // Halaman untuk menampilkan daftar kunjungan
     public function index()
     {
-        // Ambil data visit yang terkait dengan user yang sedang login
-        $visits = Visit::where('user_id', auth()->id())
+        // Ambil data visit beserta relasi PIC
+        $visits = Visit::with('pic')->where('user_id', auth()->id())
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(function ($visit) {
-                // Format ID Tiket
                 $formattedId = sprintf(
                     "VISIT/EXT/%s/MAKASSAR/%s",
                     $visit->created_at->format('Ymd'),
@@ -32,7 +34,7 @@ class VisitController extends Controller
 
                 return [
                     'id' => $formattedId,
-                    'meet_with' => $visit->meet_with,
+                    'pic' => $visit->pic ? $visit->pic->nama : '-',
                     'visit_date' => $visit->visit_date,
                     'visit_time_start' => $visit->visit_time_start,
                     'visit_time_end' => $visit->visit_time_end,
@@ -68,7 +70,7 @@ class VisitController extends Controller
                 'building_type' => 'Jenis gedung',
                 'building_category' => 'Kategori gedung',
                 'agenda' => 'Agenda',
-                'meet_with' => 'PIC',
+                'pic_id' => 'PIC',
                 'phone' => 'Nomor telepon',
                 'email' => 'Email',
                 'agreement' => 'Persetujuan'
@@ -82,7 +84,7 @@ class VisitController extends Controller
                 'building_type' => 'required|string',
                 'building_category' => 'required|string',
                 'agenda' => 'required|string',
-                'meet_with' => 'required|string',
+                'pic_id' => 'required|exists:pics,id',
                 'notes' => 'nullable|string',
                 'phone' => 'required|string',
                 'email' => 'required|email',
@@ -99,6 +101,23 @@ class VisitController extends Controller
             // Menyimpan kunjungan baru
             $visit = Visit::create($validated);
             Log::info('Visit created:', $visit->toArray());
+
+            try {
+                // Kirim email ke PIC
+                $pic = Pic::findOrFail($validated['pic_id']);
+                if ($pic && $pic->email) {
+                    Mail::to($pic->email)->send(new VisitNotification($visit, 'new'));
+                    Log::info('Email notification sent to PIC:', ['pic_email' => $pic->email]);
+                } else {
+                    Log::warning('PIC email not found:', ['pic_id' => $validated['pic_id']]);
+                }
+            } catch (\Exception $e) {
+                Log::error('Failed to send email notification:', [
+                    'error' => $e->getMessage(),
+                    'pic_id' => $validated['pic_id']
+                ]);
+                // Lanjutkan proses meskipun email gagal terkirim
+            }
 
             // Redirect ke halaman daftar kunjungan dengan pesan sukses
             return redirect()->route('visits.index')
