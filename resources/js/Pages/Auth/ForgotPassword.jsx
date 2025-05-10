@@ -11,40 +11,53 @@ export default function ForgotPassword({ status }) {
 
     const submit = (e) => {
         e.preventDefault();
-
         post(route('password.email'));
     };
 
     return (
-        <GuestLayout>
-            <Head title="Forgot Password" />
+        <>
+            <Head title="Lupa Kata Sandi - Buku Tamu" />
 
-            <div className="mb-4 text-sm text-gray-600">
-                Forgot your password? No problem. Just let us know your email address and we will email you a password
-                reset link that will allow you to choose a new one.
-            </div>
+            <div className="min-h-screen flex items-center justify-center px-4 bg-white">
+                <div className="w-full max-w-md bg-white rounded-lg p-8">
+                    <div className="text-left mb-8">
+                        <img src="/images/logo BSW.png" alt="BSW Logo" className="w-24 mb-4" />
+                        <h1 className="text-2xl font-bold text-gray-900">Lupa Kata Sandi</h1>
+                        <p className="text-gray-600 mt-2">
+                            Masukkan email Anda dan kami akan mengirimkan tautan untuk mengatur ulang kata sandi.
+                        </p>
+                    </div>
 
-            {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
+                    {status && (
+                        <div className="mb-4 font-medium text-sm text-green-600">
+                            {status}
+                        </div>
+                    )}
 
-            <form onSubmit={submit}>
-                <TextInput
-                    id="email"
-                    type="email"
-                    name="email"
-                    value={data.email}
-                    className="mt-1 block w-full"
-                    isFocused={true}
-                    onChange={(e) => setData('email', e.target.value)}
-                />
+                    <form onSubmit={submit}>
+                        <div>
+                            <TextInput
+                                id="email"
+                                type="email"
+                                name="email"
+                                value={data.email}
+                                className="mt-1 block w-full rounded-3xl"
+                                placeholder="youremail@gmail.com"
+                                isFocused={true}
+                                onChange={(e) => setData('email', e.target.value)}
+                                required
+                            />
+                            <InputError message={errors.email} className="mt-2" />
+                        </div>
 
-                <InputError message={errors.email} className="mt-2" />
-
-                <div className="flex items-center justify-end mt-4">
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Email Password Reset Link
-                    </PrimaryButton>
+                        <div className="mt-6">
+                            <PrimaryButton className="w-full justify-center rounded-3xl bg-red-600 hover:bg-red-700" disabled={processing}>
+                                {processing ? 'Mengirim...' : 'Kirim Link Reset'}
+                            </PrimaryButton>
+                        </div>
+                    </form>
                 </div>
-            </form>
-        </GuestLayout>
+            </div>
+        </>
     );
 }
