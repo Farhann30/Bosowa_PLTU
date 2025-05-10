@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react';
 import { useForm } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
@@ -23,6 +23,21 @@ export default function Create({ auth }) {
         email: '',
         agreement: false,
     });
+
+    // Tambahan untuk autocomplete PIC
+    const [picInput, setPicInput] = useState('');
+    const [picOptions, setPicOptions] = useState([]);
+    const [selectedPic, setSelectedPic] = useState(null);
+
+    useEffect(() => {
+        if (picInput.length > 0) {
+            fetch(`/api/pics?search=${picInput}`)
+                .then(res => res.json())
+                .then(data => setPicOptions(data));
+        } else {
+            setPicOptions([]);
+        }
+    }, [picInput]);
 
     const nextStep = () => {
         setCurrentStep(currentStep + 1);
@@ -203,18 +218,44 @@ export default function Create({ auth }) {
                 )}
             </div>
 
-            <div>
+            <div className="relative">
                 <InputLabel htmlFor="meet_with" value="Bertemu Dengan (PIC)" />
                 <TextInput
                     id="meet_with"
                     name="meet_with"
-                    value={data.meet_with}
-                    onChange={(e) => setData('meet_with', e.target.value)}
+                    value={picInput}
+                    onChange={e => {
+                        setPicInput(e.target.value);
+                        setSelectedPic(null);
+                        setData('meet_with', e.target.value);
+                    }}
                     type="text"
                     className="mt-1 block w-full"
                     placeholder="Nama PIC"
-                    required
+                    autoComplete="off"
                 />
+                {/* Dropdown hasil pencarian PIC */}
+                {picOptions.length > 0 && (
+                    <ul className="absolute left-0 right-0 bg-white border rounded shadow z-20 max-h-48 overflow-y-auto">
+                        {picOptions.map(pic => (
+                            <li
+                                key={pic.id}
+                                className="p-2 hover:bg-gray-200 cursor-pointer"
+                                onClick={() => {
+                                    setSelectedPic(pic);
+                                    setPicInput(pic.nama);
+                                    setData('meet_with', pic.nama);
+                                    setData('pic_id', pic.id);
+                                    setPicOptions([]);
+                                }}
+                            >
+                                {pic.nama} ({pic.email})
+                            </li>
+                        ))}
+                    </ul>
+                )}
+                {/* Hidden input untuk ID PIC */}
+                <input type="hidden" name="pic_id" value={selectedPic ? selectedPic.id : ''} />
                 {errors.meet_with && (
                     <p className="text-sm text-red-600 mt-1">{errors.meet_with}</p>
                 )}

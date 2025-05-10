@@ -22,7 +22,7 @@ export default function List({ auth, visits }) {
 
     const filteredVisits = visits.filter(visit => {
         const matchesSearch = visit.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            visit.meet_with.toLowerCase().includes(searchQuery.toLowerCase());
+            (visit.pic && visit.pic.toLowerCase().includes(searchQuery.toLowerCase()));
         const matchesStatus = !selectedStatus || visit.status === selectedStatus;
         return matchesSearch && matchesStatus;
     });
@@ -96,7 +96,7 @@ export default function List({ auth, visits }) {
                                                     {visit.id}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {visit.meet_with}
+                                                    {visit.pic}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                     {new Date(visit.visit_date).toLocaleDateString('id-ID')}

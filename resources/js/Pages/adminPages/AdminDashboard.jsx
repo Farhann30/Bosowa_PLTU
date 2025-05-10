@@ -100,21 +100,21 @@ const AdminDashboard = ({ auth, visits }) => {
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                         <h1 className="text-2xl font-bold mb-6">Welcome to Admin Dashboard, {auth.user.name}!</h1>
 
-                        {/* Dashboard Overview */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                {/* Dashboard Overview */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                             <div className="bg-white p-5 rounded-lg shadow-md flex justify-between items-center border border-gray-200">
                                 <h3 className="text-xl font-bold text-gray-700">Total Kunjungan</h3>
-                                <p className="text-3xl text-blue-600">{visits.length}</p>
-                            </div>
+                        <p className="text-3xl text-blue-600">{visits.length}</p>
+                    </div>
                             <div className="bg-white p-5 rounded-lg shadow-md flex justify-between items-center border border-gray-200">
                                 <h3 className="text-xl font-bold text-gray-700">Kunjungan Pending</h3>
-                                <p className="text-3xl text-yellow-600">{pendingVisits.length}</p>
-                            </div>
+                        <p className="text-3xl text-yellow-600">{pendingVisits.length}</p>
+                    </div>
                             <div className="bg-white p-5 rounded-lg shadow-md flex justify-between items-center border border-gray-200">
                                 <h3 className="text-xl font-bold text-gray-700">Kunjungan Diterima</h3>
-                                <p className="text-3xl text-green-600">{acceptedVisits.length}</p>
-                            </div>
-                        </div>
+                        <p className="text-3xl text-green-600">{acceptedVisits.length}</p>
+                    </div>
+                </div>
 
                         {/* Statistik Chart */}
                         <div className="bg-white p-6 rounded-lg shadow-md mb-10 border border-gray-200">
@@ -166,14 +166,14 @@ const AdminDashboard = ({ auth, visits }) => {
                                 </svg>
                                 Export Excel
                             </button>
-                        </div>
+                </div>
 
                         {/* Tabel Kunjungan */}
                         <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
                             <h3 className="text-2xl font-bold text-gray-700 mb-4">Kelola Kunjungan</h3>
                             <div className="overflow-x-auto">
                                 <table className="w-full table-auto border-collapse text-sm">
-                                    <thead>
+                        <thead>
                                         <tr className="bg-gray-50">
                                             <th className="px-3 py-2 border text-left">Tanggal</th>
                                             <th className="px-3 py-2 border text-left">Waktu</th>
@@ -185,9 +185,9 @@ const AdminDashboard = ({ auth, visits }) => {
                                             <th className="px-3 py-2 border text-left">Kontak</th>
                                             <th className="px-3 py-2 border text-left">Status</th>
                                             <th className="px-3 py-2 border text-left">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                            </tr>
+                        </thead>
+                        <tbody>
                                         {filteredVisits.map(visit => (
                                             <tr key={visit.id} className="hover:bg-gray-50">
                                                 <td className="px-3 py-2 border">{formatDate(visit.visit_date)}</td>
@@ -219,30 +219,30 @@ const AdminDashboard = ({ auth, visits }) => {
                                                     </span>
                                                 </td>
                                                 <td className="px-3 py-2 border">
-                                                    {visit.status === "pending" && (
+                                        {visit.status === "pending" && (
                                                         <div className="flex space-x-2">
-                                                            <button
+                                                <button
                                                                 className="bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600 text-xs"
-                                                            >
+                                                >
                                                                 Terima
-                                                            </button>
-                                                            <button
+                                                </button>
+                                                <button
                                                                 className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 text-xs"
-                                                            >
+                                                >
                                                                 Tolak
-                                                            </button>
+                                                </button>
                                                         </div>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
                         </div>
                     </div>
                 </div>
-            </div>
+        </div>
         </AdminLayout>
     );
 };
