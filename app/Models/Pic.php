@@ -9,16 +9,5 @@ class Pic extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'email',
-        'phone',
-        'position',
-        'department'
-    ];
-
-    public function visits()
-    {
-        return $this->hasMany(Visit::class);
-    }
+    protected $fillable = ['nama', 'pic', 'email'];
 }
