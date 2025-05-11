@@ -118,9 +118,7 @@ export default function Create({ auth }) {
                     className="mt-1 block w-full"
                     required
                 />
-                {errors.visit_date && (
-                    <p className="text-sm text-red-600 mt-1">{errors.visit_date}</p>
-                )}
+                <InputError message={errors.visit_date} className="mt-1" />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -135,9 +133,7 @@ export default function Create({ auth }) {
                         className="mt-1 block w-full"
                         required
                     />
-                    {errors.visit_time_start && (
-                        <p className="text-sm text-red-600 mt-1">{errors.visit_time_start}</p>
-                    )}
+                    <InputError message={errors.visit_time_start} className="mt-1" />
                 </div>
                 <div>
                     <InputLabel htmlFor="visit_time_end" value="Sampai" />
@@ -150,9 +146,7 @@ export default function Create({ auth }) {
                         className="mt-1 block w-full"
                         required
                     />
-                    {errors.visit_time_end && (
-                        <p className="text-sm text-red-600 mt-1">{errors.visit_time_end}</p>
-                    )}
+                    <InputError message={errors.visit_time_end} className="mt-1" />
                 </div>
             </div>
 
@@ -170,9 +164,7 @@ export default function Create({ auth }) {
                     <option value="Office">Office</option>
                     <option value="Workshop">Workshop</option>
                 </SelectInput>
-                {errors.building_type && (
-                    <p className="text-sm text-red-600 mt-1">{errors.building_type}</p>
-                )}
+                <InputError message={errors.building_type} className="mt-1" />
             </div>
 
             <div>
@@ -189,9 +181,7 @@ export default function Create({ auth }) {
                     <option value="Semi-Restricted">Semi-Restricted</option>
                     <option value="Non-Restricted">Non-Restricted</option>
                 </SelectInput>
-                {errors.building_category && (
-                    <p className="text-sm text-red-600 mt-1">{errors.building_category}</p>
-                )}
+                <InputError message={errors.building_category} className="mt-1" />
             </div>
         </div>
     );
@@ -213,9 +203,7 @@ export default function Create({ auth }) {
                     <option value="Audit">Audit</option>
                     <option value="Others">Others</option>
                 </SelectInput>
-                {errors.agenda && (
-                    <p className="text-sm text-red-600 mt-1">{errors.agenda}</p>
-                )}
+                <InputError message={errors.agenda} className="mt-1" />
             </div>
 
             <div className="relative">
@@ -256,9 +244,7 @@ export default function Create({ auth }) {
                 )}
                 {/* Hidden input untuk ID PIC */}
                 <input type="hidden" name="pic_id" value={selectedPic ? selectedPic.id : ''} />
-                {errors.meet_with && (
-                    <p className="text-sm text-red-600 mt-1">{errors.meet_with}</p>
-                )}
+                <InputError message={errors.meet_with} className="mt-1" />
             </div>
 
             <div>
@@ -271,9 +257,7 @@ export default function Create({ auth }) {
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                     rows={4}
                 />
-                {errors.notes && (
-                    <p className="text-sm text-red-600 mt-1">{errors.notes}</p>
-                )}
+                <InputError message={errors.notes} className="mt-1" />
             </div>
         </div>
     );
@@ -335,9 +319,7 @@ export default function Create({ auth }) {
                     className="mt-1 block w-full"
                     required
                 />
-                {errors.phone && (
-                    <p className="text-sm text-red-600 mt-1">{errors.phone}</p>
-                )}
+                <InputError message={errors.phone} className="mt-1" />
             </div>
 
             <div>
@@ -350,9 +332,7 @@ export default function Create({ auth }) {
                     className="mt-1 block w-full"
                     required
                 />
-                {errors.email && (
-                    <p className="text-sm text-red-600 mt-1">{errors.email}</p>
-                )}
+                <InputError message={errors.email} className="mt-1" />
             </div>
 
             <div className="mt-4">
@@ -369,9 +349,7 @@ export default function Create({ auth }) {
                         3. Saya bersedia mematuhi HSE yang berlaku di PLTU BOSOWA ENERGI
                     </span>
                 </label>
-                {errors.agreement && (
-                    <p className="text-sm text-red-600 mt-1">{errors.agreement}</p>
-                )}
+                <InputError message={errors.agreement} className="mt-1" />
             </div>
         </div>
     );
