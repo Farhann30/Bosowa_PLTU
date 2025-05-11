@@ -41,7 +41,12 @@ composer install
 npm install
 ```
 
-### 4. Setup Environment
+### 4. Setup sonner
+```bash
+npm install sonner
+```
+
+### 5. Setup Environment
 ```bash
 # Copy file environment
 cp .env.example .env
