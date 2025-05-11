@@ -40,8 +40,10 @@ class PicController extends Controller
 
     public function approve(Visit $visit)
     {
-        // Pastikan PIC yang login adalah PIC yang ditunjuk
-        if ($visit->pic_id !== auth()->id()) {
+        $user = auth()->user();
+        $pic = Pic::where('email', $user->email)->first();
+
+        if (!$pic || $visit->pic_id !== $pic->id) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized'
@@ -52,7 +54,6 @@ class PicController extends Controller
             'status' => 'approved'
         ]);
 
-        // Kirim email ke pengunjung
         Mail::to($visit->email)->send(new VisitNotification($visit, 'approved'));
 
         return response()->json([
