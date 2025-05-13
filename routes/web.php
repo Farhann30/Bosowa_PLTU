@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/visits', 'index')->name('visits.index');
         Route::get('/visits/create', 'create')->name('visits.create');
         Route::post('/visits', 'store')->name('visits.store');
+        Route::delete('/visits/{id}', 'destroy')->name('visits.destroy');
     });
 
     // Profile Routes
@@ -52,7 +53,9 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-Route::middleware(['auth', 'admin'])->get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::delete('/visits/{id}', [VisitController::class, 'destroy'])->name('visits.destroy');
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+});
 
 require __DIR__.'/auth.php';

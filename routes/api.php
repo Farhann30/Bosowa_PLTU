@@ -23,3 +23,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->get('/visits', [VisitController::class, 'apiIndex']);
 
 Route::get('/pics', [PicController::class, 'index']);
+
+Route::delete('/visits/{id}', [VisitController::class, 'destroy'])->name('visits.destroy');

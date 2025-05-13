@@ -1,38 +1,89 @@
 import React, { useState, useMemo } from 'react';
-import { Link } from '@inertiajs/react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Head } from '@inertiajs/react';
 import * as XLSX from 'xlsx';
+import { Inertia } from '@inertiajs/inertia';
 
 // Register chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const AdminDashboard = ({ auth, visits }) => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedIds, setSelectedIds] = useState([]);
+    const [sortConfig, setSortConfig] = useState({ key: 'visit_date', direction: 'desc' });
 
     // Menyaring data kunjungan berdasarkan status
     const pendingVisits = visits.filter(visit => visit.status === "pending");
     const acceptedVisits = visits.filter(visit => visit.status === "accepted");
     const rejectedVisits = visits.filter(visit => visit.status === "rejected");
 
-    // Filter data berdasarkan search term
+    // Fungsi untuk handle select all
+    const handleSelectAll = (e) => {
+        if (e.target.checked) {
+            setSelectedIds(filteredVisits.map(v => v.id));
+        } else {
+            setSelectedIds([]);
+        }
+    };
+
+    // Fungsi untuk handle select per baris
+    const handleSelect = (id) => {
+        setSelectedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+    };
+
+    // Fungsi hapus banyak
+    const handleDeleteSelected = () => {
+        if (selectedIds.length === 0) return alert('Pilih data yang ingin dihapus!');
+        if (confirm('Yakin ingin menghapus kunjungan terpilih?')) {
+            selectedIds.forEach(id => Inertia.delete(`/visits/${id}`));
+            setSelectedIds([]);
+        }
+    };
+
+    // Fungsi sorting
+    const handleSort = (key) => {
+        setSortConfig(prev => {
+            if (prev.key === key) {
+                return { key, direction: prev.direction === 'asc' ? 'desc' : 'asc' };
+            }
+            return { key, direction: 'asc' };
+        });
+    };
+
+    // Sorting dan filter
     const filteredVisits = useMemo(() => {
-        return visits.filter(visit => {
+        let data = visits.filter(visit => {
             const searchLower = searchTerm.toLowerCase();
             return (
-                visit.meet_with.toLowerCase().includes(searchLower) ||
-                visit.phone.toLowerCase().includes(searchLower) ||
-                visit.email.toLowerCase().includes(searchLower) ||
-                visit.agenda.toLowerCase().includes(searchLower) ||
-                visit.building_type.toLowerCase().includes(searchLower) ||
-                visit.building_category.toLowerCase().includes(searchLower) ||
-                visit.notes?.toLowerCase().includes(searchLower) ||
-                visit.status.toLowerCase().includes(searchLower)
+                (visit.meet_with || '').toLowerCase().includes(searchLower) ||
+                (visit.phone || '').toLowerCase().includes(searchLower) ||
+                (visit.email || '').toLowerCase().includes(searchLower) ||
+                (visit.agenda || '').toLowerCase().includes(searchLower) ||
+                (visit.building_type || '').toLowerCase().includes(searchLower) ||
+                (visit.building_category || '').toLowerCase().includes(searchLower) ||
+                (visit.notes || '').toLowerCase().includes(searchLower) ||
+                (visit.status || '').toLowerCase().includes(searchLower)
             );
         });
-    }, [visits, searchTerm]);
+        // Sorting
+        if (sortConfig.key) {
+            data = [...data].sort((a, b) => {
+                let aVal = a[sortConfig.key] ?? '';
+                let bVal = b[sortConfig.key] ?? '';
+                // Untuk tanggal
+                if (sortConfig.key === 'visit_date') {
+                    aVal = new Date(aVal);
+                    bVal = new Date(bVal);
+                }
+                if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+                if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+        return data;
+    }, [visits, searchTerm, sortConfig]);
 
     // Data chart berdasarkan status kunjungan
     const chartData = {
@@ -169,27 +220,43 @@ const AdminDashboard = ({ auth, visits }) => {
                 </div>
 
                         {/* Tabel Kunjungan */}
+                        <div className="flex items-center mb-4">
+                            <button
+                                onClick={handleDeleteSelected}
+                                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 mr-4"
+                                disabled={selectedIds.length === 0}
+                            >
+                                Hapus Terpilih
+                            </button>
+                            <span className="text-sm text-gray-600">{selectedIds.length} dipilih</span>
+                        </div>
                         <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
                             <h3 className="text-2xl font-bold text-gray-700 mb-4">Kelola Kunjungan</h3>
                             <div className="overflow-x-auto">
                                 <table className="w-full table-auto border-collapse text-sm">
                         <thead>
                                         <tr className="bg-gray-50">
-                                            <th className="px-3 py-2 border text-left">Tanggal</th>
-                                            <th className="px-3 py-2 border text-left">Waktu</th>
-                                            <th className="px-3 py-2 border text-left">Jenis Gedung</th>
-                                            <th className="px-3 py-2 border text-left">Kategori</th>
-                                            <th className="px-3 py-2 border text-left">Agenda</th>
-                                            <th className="px-3 py-2 border text-left">Bertemu Dengan</th>
-                                            <th className="px-3 py-2 border text-left">Catatan</th>
-                                            <th className="px-3 py-2 border text-left">Kontak</th>
-                                            <th className="px-3 py-2 border text-left">Status</th>
+                                            <th className="px-3 py-2 border text-left">
+                                                <input type="checkbox" onChange={handleSelectAll} checked={selectedIds.length === filteredVisits.length && filteredVisits.length > 0} />
+                                            </th>
+                                            <th className="px-3 py-2 border text-left cursor-pointer" onClick={() => handleSort('visit_date')}>Tanggal</th>
+                                            <th className="px-3 py-2 border text-left cursor-pointer" onClick={() => handleSort('visit_time_start')}>Waktu</th>
+                                            <th className="px-3 py-2 border text-left cursor-pointer" onClick={() => handleSort('building_type')}>Jenis Gedung</th>
+                                            <th className="px-3 py-2 border text-left cursor-pointer" onClick={() => handleSort('building_category')}>Kategori</th>
+                                            <th className="px-3 py-2 border text-left cursor-pointer" onClick={() => handleSort('agenda')}>Agenda</th>
+                                            <th className="px-3 py-2 border text-left cursor-pointer" onClick={() => handleSort('meet_with')}>Bertemu Dengan</th>
+                                            <th className="px-3 py-2 border text-left cursor-pointer" onClick={() => handleSort('notes')}>Catatan</th>
+                                            <th className="px-3 py-2 border text-left cursor-pointer" onClick={() => handleSort('phone')}>Kontak</th>
+                                            <th className="px-3 py-2 border text-left cursor-pointer" onClick={() => handleSort('status')}>Status</th>
                                             <th className="px-3 py-2 border text-left">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                                         {filteredVisits.map(visit => (
                                             <tr key={visit.id} className="hover:bg-gray-50">
+                                                <td className="px-3 py-2 border">
+                                                    <input type="checkbox" checked={selectedIds.includes(visit.id)} onChange={() => handleSelect(visit.id)} />
+                                                </td>
                                                 <td className="px-3 py-2 border">{formatDate(visit.visit_date)}</td>
                                                 <td className="px-3 py-2 border">
                                                     {formatTime(visit.visit_time_start)} - {formatTime(visit.visit_time_end)}
@@ -197,7 +264,9 @@ const AdminDashboard = ({ auth, visits }) => {
                                                 <td className="px-3 py-2 border">{visit.building_type}</td>
                                                 <td className="px-3 py-2 border">{visit.building_category}</td>
                                                 <td className="px-3 py-2 border">{visit.agenda}</td>
-                                                <td className="px-3 py-2 border">{visit.meet_with}</td>
+                                                <td className="px-3 py-2 border">
+                                                    {visit.pic?.nama || visit.meet_with || '-'}
+                                                </td>
                                                 <td className="px-3 py-2 border">
                                                     <div className="max-w-xs truncate" title={visit.notes}>
                                                         {visit.notes || '-'}
@@ -212,30 +281,22 @@ const AdminDashboard = ({ auth, visits }) => {
                                                 <td className="px-3 py-2 border">
                                                     <span className={`px-2 py-1 rounded-full text-xs ${
                                                         visit.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                                        visit.status === 'accepted' ? 'bg-green-100 text-green-800' :
+                                                        visit.status === 'approved' ? 'bg-green-100 text-green-800' :
                                                         'bg-red-100 text-red-800'
                                                     }`}>
                                                         {visit.status}
                                                     </span>
                                                 </td>
                                                 <td className="px-3 py-2 border">
-                                        {visit.status === "pending" && (
-                                                        <div className="flex space-x-2">
-                                                <button
-                                                                className="bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600 text-xs"
-                                                >
-                                                                Terima
-                                                </button>
-                                                <button
-                                                                className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 text-xs"
-                                                >
-                                                                Tolak
-                                                </button>
-                                                        </div>
-                                        )}
-                                    </td>
-                                </tr>
-                            ))}
+                                                    <button
+                                                        className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 text-xs"
+                                                        onClick={() => handleDeleteSelected(visit.id)}
+                                                    >
+                                                        Hapus
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
                         </tbody>
                     </table>
                 </div>

@@ -40,7 +40,7 @@ export default function Register() {
             >
                 <div className="w-full max-w-md p-8 relative z-10 bg-white/80 rounded-xl shadow-lg backdrop-blur-md">
                     <div className="text-left mb-8">
-                        <img src="/images/logo BSW.png" alt="BSW Logo" className="w-24 mb-4 drop-shadow-lg" />
+                        <img src="/images/logo bosowa.png" alt="BSW Logo" className="w-40 mb-4 drop-shadow-lg" />
                         <h1 className="text-2xl font-bold text-gray-900">Daftar</h1>
                         <p className="text-gray-700 mt-2">Buat akun baru untuk mengakses buku tamu</p>
                     </div>

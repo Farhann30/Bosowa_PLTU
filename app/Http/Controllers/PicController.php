@@ -64,8 +64,10 @@ class PicController extends Controller
 
     public function reject(Visit $visit)
     {
-        // Pastikan PIC yang login adalah PIC yang ditunjuk
-        if ($visit->pic_id !== auth()->id()) {
+        $user = auth()->user();
+        $pic = Pic::where('email', $user->email)->first();
+
+        if (!$pic || $visit->pic_id !== $pic->id) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized'
