@@ -21,7 +21,7 @@ export default function ForgotPassword({ status }) {
             <div className="min-h-screen flex items-center justify-center px-4 bg-white">
                 <div className="w-full max-w-md bg-white rounded-lg p-8">
                     <div className="text-left mb-8">
-                        <img src="/images/logo BSW.png" alt="BSW Logo" className="w-24 mb-4" />
+                        <img src="/images/logo bosowa.png" alt="BSW Logo" className="w-40 mb-4" />
                         <h1 className="text-2xl font-bold text-gray-900">Lupa Kata Sandi</h1>
                         <p className="text-gray-600 mt-2">
                             Masukkan email Anda dan kami akan mengirimkan tautan untuk mengatur ulang kata sandi.

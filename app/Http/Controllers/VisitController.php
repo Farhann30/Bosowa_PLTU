@@ -139,4 +139,17 @@ class VisitController extends Controller
                 ->withInput();
         }
     }
+
+    public function destroy(Request $request, $id)
+    {
+        $visit = Visit::findOrFail($id);
+        $visit->delete();
+
+        if ($request->inertia()) {
+            // Inertia redirect
+            return Inertia::location(route('admin.dashboard'));
+        }
+
+        return redirect()->route('admin.dashboard')->with('success', 'Data kunjungan berhasil dihapus.');
+    }
 }

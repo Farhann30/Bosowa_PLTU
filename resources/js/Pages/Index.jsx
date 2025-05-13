@@ -31,7 +31,7 @@ export default function Welcome({ auth }) {
 
                 {/* Main Content */}
                 <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
-                    <img src="/images/logo BSW.png"  alt="BSW Logo" className="w-48 mb-8" />
+                    <img src="/images/logo bosowa BG.png"  alt="BSW Logo" className="w-41 mb-10" />
                     <h1 className="text-white text-4xl font-bold mb-2">PLTU Bosowa Energi</h1>
                     <h2 className="text-white text-3xl font-bold mb-6">Guest Book</h2>
                     <p className="text-white text-center max-w-2xl mb-8">
