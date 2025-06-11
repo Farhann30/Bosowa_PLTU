@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PicController;
+use App\Http\Controllers\AssetController;
+use App\Http\Controllers\EsikController;
+use App\Http\Controllers\OutgoingGoodController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +43,16 @@ Route::middleware('auth')->group(function () {
         Route::delete('/visits/{id}', 'destroy')->name('visits.destroy');
     });
 
+    // Asset routes
+    Route::controller(AssetController::class)->group(function () {
+        Route::get('/assets', 'index')->name('assets.index');
+        Route::post('/assets', 'store')->name('assets.store');
+        Route::delete('/assets/{asset}', 'destroy')->name('assets.destroy');
+    });
+
+    // Route untuk halaman aset user
+    Route::get('/guest/asset', [AssetController::class, 'index'])->name('guest.asset');
+
     // Profile Routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -51,6 +64,20 @@ Route::middleware('auth')->group(function () {
         Route::post('/api/visits/{visit}/approve', [PicController::class, 'approve'])->name('visits.approve');
         Route::post('/api/visits/{visit}/reject', [PicController::class, 'reject'])->name('visits.reject');
     });
+
+    // New route for guest help
+    Route::get('/guest/help', function() {
+        return inertia('Guest/Help');
+    })->middleware(['auth'])->name('guest.help');
+
+    // New route for SOC guest
+    Route::get('/guest/soc', function() {
+        return inertia('Guest/Soc');
+    })->middleware(['auth'])->name('guest.soc');
+
+    // Route untuk barang keluar
+    Route::get('/guest/outgoing-goods', [OutgoingGoodController::class, 'index'])->name('guest.outgoing-goods');
+    Route::post('/guest/outgoing-goods', [OutgoingGoodController::class, 'store'])->name('guest.outgoing-goods.store');
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {

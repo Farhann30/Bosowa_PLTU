@@ -32,7 +32,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="{{ asset('images/logo-bosowa.png') }}" alt="Bosowa Logo" style="height: 50px;">
+            <img src="{{ asset('images/Logo bosowa.png') }}" alt="Bosowa Logo" style="height: 50px;">
         </div>
 
         <div class="content">
@@ -53,9 +53,9 @@
             <div style="margin: 20px 0;">
                 <p><strong>Detail Kunjungan:</strong></p>
                 <ul>
-                    <li>Nama: {{ $visit->visitor_name }}</li>
+                    <li>Nama: {{ $visit->user ? $visit->user->name : '-' }}</li>
                     <li>Tanggal: {{ \Carbon\Carbon::parse($visit->visit_date)->format('d/m/Y') }}</li>
-                    <li>Waktu: {{ $visit->visit_time }}</li>
+                    <li>Waktu: {{ $visit->visit_time_start }} - {{ $visit->visit_time_end }}</li>
                     <li>Agenda: {{ $visit->agenda }}</li>
                     <li>Status: {{ ucfirst($visit->status) }}</li>
                 </ul>

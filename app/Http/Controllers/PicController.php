@@ -54,6 +54,8 @@ class PicController extends Controller
             'status' => 'approved'
         ]);
 
+        $visit->load(['pic', 'user']);
+
         Mail::to($visit->email)->send(new VisitNotification($visit, 'approved'));
 
         return response()->json([
@@ -78,7 +80,8 @@ class PicController extends Controller
             'status' => 'rejected'
         ]);
 
-        // Kirim email ke pengunjung
+        $visit->load(['pic', 'user']);
+
         Mail::to($visit->email)->send(new VisitNotification($visit, 'rejected'));
 
         return response()->json([

@@ -17,7 +17,7 @@ export default function PicDashboard({ auth, visits }) {
         setSearchQuery(query);
         
         const filtered = visits.filter(visit => 
-            visit.visitor_name.toLowerCase().includes(query.toLowerCase()) ||
+            users.name.toLowerCase().includes(query.toLowerCase()) ||
             visit.phone_number.includes(query) ||
             visit.agenda.toLowerCase().includes(query.toLowerCase())
         );
@@ -101,7 +101,7 @@ export default function PicDashboard({ auth, visits }) {
                                                 <TableCell>
                                                     {new Date(visit.visit_date).toLocaleDateString('id-ID')}
                                                 </TableCell>
-                                                <TableCell>{visit.visitor_name}</TableCell>
+                                                <TableCell>{visit.name}</TableCell>
                                                 <TableCell>{visit.agenda}</TableCell>
                                                 <TableCell>{getStatusBadge(visit.status)}</TableCell>
                                                 <TableCell>

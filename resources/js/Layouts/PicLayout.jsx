@@ -18,7 +18,7 @@ export default function PicLayout({ user, children }) {
                         <div className="flex items-center">
                             <Link href="/pic/dashboard">
                                 <img
-                                    src="/images/logo-bosowa.png"
+                                    src="/images/Logo bosowa.png"
                                     alt="Bosowa Logo"
                                     className="h-8 w-auto"
                                 />
