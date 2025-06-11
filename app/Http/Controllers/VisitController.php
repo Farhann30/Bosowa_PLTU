@@ -15,26 +15,33 @@ class VisitController extends Controller
     // Halaman untuk menampilkan form create
     public function create()
     {
-        return Inertia::render('Visit/Create');
+        $assets = auth()->user()->assets()->latest()->get()->map->only(['id', 'name', 'category', 'code', 'location', 'description']);
+        return Inertia::render('Visit/Create', [
+            'assets' => $assets
+        ]);
     }
 
     // Halaman untuk menampilkan daftar kunjungan
     public function index()
     {
-        // Ambil data visit beserta relasi PIC
-        $visits = Visit::with('pic')->where('user_id', auth()->id())
-            ->orderBy('created_at', 'desc')
+        // Ambil data visit beserta relasi PIC dan User
+        $visits = Visit::with(['pic', 'user']) // Memuat relasi 'pic' dan 'user'
+            ->where('user_id', auth()->id()) // Hanya mengambil data untuk pengguna yang sedang login
+            ->orderBy('created_at', 'desc') // Mengurutkan berdasarkan tanggal dibuat
             ->get()
             ->map(function ($visit) {
+                // Format ID kunjungan
                 $formattedId = sprintf(
                     "VISIT/EXT/%s/MAKASSAR/%s",
                     $visit->created_at->format('Ymd'),
                     str_pad($visit->id, 6, '0', STR_PAD_LEFT)
                 );
 
+                // Kembalikan data kunjungan dan tambahkan nama pengguna
                 return [
                     'id' => $formattedId,
-                    'pic' => $visit->pic ? $visit->pic->nama : '-',
+                    'pic' => $visit->pic ? $visit->pic->nama : '-', // Menampilkan nama PIC
+                    'user_name' => $visit->user->name, // Menambahkan nama pengguna
                     'visit_date' => $visit->visit_date,
                     'visit_time_start' => $visit->visit_time_start,
                     'visit_time_end' => $visit->visit_time_end,
@@ -47,6 +54,7 @@ class VisitController extends Controller
             'visits' => $visits
         ]);
     }
+
 
     // Menyimpan kunjungan baru
     public function store(Request $request)

@@ -7,8 +7,9 @@ import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
 import SelectInput from '@/Components/SelectInput';
 import Checkbox from '@/Components/Checkbox';
+import Modal from '@/Components/Modal';
 
-export default function Create({ auth }) {
+export default function Create({ auth, assets = [] }) {
     const [currentStep, setCurrentStep] = useState(1);
     const { data, setData, post, processing, errors } = useForm({
         visit_date: '',
@@ -28,6 +29,9 @@ export default function Create({ auth }) {
     const [picInput, setPicInput] = useState('');
     const [picOptions, setPicOptions] = useState([]);
     const [selectedPic, setSelectedPic] = useState(null);
+
+    const [showAssetModal, setShowAssetModal] = useState(false);
+    const [selectedAssets, setSelectedAssets] = useState([]);
 
     useEffect(() => {
         if (picInput.length > 0) {
@@ -103,6 +107,12 @@ export default function Create({ auth }) {
             },
             preserveScroll: true,
         });
+    };
+
+    const handleAssetCheck = (id) => {
+        setSelectedAssets((prev) =>
+            prev.includes(id) ? prev.filter((aid) => aid !== id) : [...prev, id]
+        );
     };
 
     const renderStep1 = () => (
@@ -264,45 +274,70 @@ export default function Create({ auth }) {
 
     const renderStep3 = () => (
         <div className="space-y-6">
-            <h2 className="text-xl font-semibold">Upload KTP</h2>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
-                <div className="flex justify-center">
-                    <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                </div>
-                <div className="mt-4">
-                    <form action= "" method= "get">
-                        <label for="ktp"></label>
-                            <button
-                                type="button"
-                                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            >
-                               <input type='file'/>
-                            </button>
-                    </form> 
-                </div>
-            </div>
-            <div><h2 className="text-xl font-semibold">Upload Pas Foto</h2></div>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
+            <h2 className="text-xl font-semibold">Pilih Aset yang Dibawa</h2>
+            <p className="text-gray-600">Silakan pilih aset yang akan Anda bawa saat kunjungan. Jika belum ada, tambahkan aset terlebih dahulu.</p>
             <div className="flex justify-center">
-                    <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                </div>
-                <div className="mt-4">
-                <form action= "" method= "get">
-                        <label for="PAS FOTO"></label>
-                            <button
-                                type="button"
-                                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            >
-                               <input type='file'/>
-                            </button>
-                    </form> 
-                </div>
-                
+                <button
+                    type="button"
+                    className="inline-flex items-center px-6 py-3 bg-white border border-red-500 text-red-600 rounded-lg font-semibold shadow hover:bg-red-50 transition"
+                    onClick={() => setShowAssetModal(true)}
+                >
+                    + Tambah Aset
+                </button>
             </div>
+            {/* Tampilkan aset terpilih */}
+            {selectedAssets.length > 0 && (
+                <div className="mt-4">
+                    <h3 className="font-semibold mb-2">Aset Terpilih:</h3>
+                    <ul className="list-disc ml-6">
+                        {assets.filter(a => selectedAssets.includes(a.id)).map(a => (
+                            <li key={a.id}>{a.name} ({a.category}) - {a.code}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+            {/* Modal checklist aset */}
+            {showAssetModal && (
+                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg p-8 max-w-md w-full">
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-xl font-bold text-gray-900">Pilih Aset</h2>
+                            <button onClick={() => setShowAssetModal(false)} className="text-gray-400 hover:text-gray-500">
+                                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div>
+                            <div className="space-y-2 max-h-64 overflow-y-auto">
+                                {assets.length === 0 ? (
+                                    <div className="text-gray-500">Belum ada aset.</div>
+                                ) : (
+                                    assets.map(asset => (
+                                        <label key={asset.id} className="flex items-center space-x-2">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedAssets.includes(asset.id)}
+                                                onChange={() => handleAssetCheck(asset.id)}
+                                            />
+                                            <span>{asset.name} ({asset.category}) - {asset.code}</span>
+                                        </label>
+                                    ))
+                                )}
+                            </div>
+                            <div className="mt-6 flex justify-end">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowAssetModal(false)}
+                                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition font-semibold"
+                                >
+                                    Simpan Pilihan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 
