@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { useState } from 'react';
 import InputError from '@/Components/InputError';
@@ -36,9 +36,9 @@ export default function OutgoingGoods({ auth, goods = [] }) {
                         <div className="p-6">
                             <div className="flex justify-between items-center mb-6">
                                 <h1 className="text-2xl font-bold text-gray-900">Barang Keluar</h1>
-                                <button 
+                                <button
                                     onClick={() => setShowModal(true)}
-                                    className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 transition font-semibold"
+                                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition font-semibold"
                                 >
                                     + Tambah Barang Keluar
                                 </button>
@@ -50,25 +50,25 @@ export default function OutgoingGoods({ auth, goods = [] }) {
                                             <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Barang</th>
                                             <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
                                             <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Penerima</th>
-                                            <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Keluar</th>
+                                            <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
                                             <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
-                                        {goods && goods.length === 0 ? (
+                                        {goods.length === 0 ? (
                                             <tr>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500" colSpan={5}>
+                                                <td className="px-6 py-4 text-sm text-gray-500" colSpan={5}>
                                                     Belum ada data barang keluar.
                                                 </td>
                                             </tr>
                                         ) : (
-                                            goods && goods.map((item) => (
+                                            goods.map((item) => (
                                                 <tr key={item.id}>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.name}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.quantity}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.receiver}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.date}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.status}</td>
+                                                    <td className="px-6 py-4 text-sm text-gray-900">{item.name}</td>
+                                                    <td className="px-6 py-4 text-sm text-gray-900">{item.quantity}</td>
+                                                    <td className="px-6 py-4 text-sm text-gray-900">{item.receiver}</td>
+                                                    <td className="px-6 py-4 text-sm text-gray-900">{item.date}</td>
+                                                    <td className="px-6 py-4 text-sm text-gray-900">{item.status}</td>
                                                 </tr>
                                             ))
                                         )}
@@ -86,7 +86,7 @@ export default function OutgoingGoods({ auth, goods = [] }) {
                     <div className="bg-white rounded-lg p-8 max-w-md w-full">
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-xl font-bold text-gray-900">Tambah Barang Keluar</h2>
-                            <button 
+                            <button
                                 onClick={() => setShowModal(false)}
                                 className="text-gray-400 hover:text-gray-500"
                             >
@@ -103,70 +103,70 @@ export default function OutgoingGoods({ auth, goods = [] }) {
                                     <TextInput
                                         id="name"
                                         type="text"
-                                        name="name"
                                         value={data.name}
-                                        className="mt-1 block w-full"
                                         onChange={(e) => setData('name', e.target.value)}
+                                        className="mt-1 block w-full"
                                         required
                                     />
                                     <InputError message={errors.name} className="mt-2" />
                                 </div>
+
                                 <div>
                                     <InputLabel htmlFor="quantity" value="Jumlah" />
                                     <TextInput
                                         id="quantity"
                                         type="number"
-                                        name="quantity"
                                         value={data.quantity}
-                                        className="mt-1 block w-full"
                                         onChange={(e) => setData('quantity', e.target.value)}
+                                        className="mt-1 block w-full"
                                         required
                                     />
                                     <InputError message={errors.quantity} className="mt-2" />
                                 </div>
+
                                 <div>
                                     <InputLabel htmlFor="receiver" value="Penerima" />
                                     <TextInput
                                         id="receiver"
                                         type="text"
-                                        name="receiver"
                                         value={data.receiver}
-                                        className="mt-1 block w-full"
                                         onChange={(e) => setData('receiver', e.target.value)}
+                                        className="mt-1 block w-full"
                                         required
                                     />
                                     <InputError message={errors.receiver} className="mt-2" />
                                 </div>
+
                                 <div>
                                     <InputLabel htmlFor="date" value="Tanggal Keluar" />
                                     <TextInput
                                         id="date"
                                         type="date"
-                                        name="date"
                                         value={data.date}
-                                        className="mt-1 block w-full"
                                         onChange={(e) => setData('date', e.target.value)}
+                                        className="mt-1 block w-full"
                                         required
                                     />
                                     <InputError message={errors.date} className="mt-2" />
                                 </div>
+
                                 <div>
                                     <InputLabel htmlFor="status" value="Status" />
                                     <select
                                         id="status"
-                                        name="status"
                                         value={data.status}
                                         onChange={(e) => setData('status', e.target.value)}
-                                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-gray-700 focus:ring-gray-700"
+                                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-red-500 focus:ring-red-500"
                                         required
                                     >
                                         <option value="">Pilih Status</option>
-                                        <option value="Sementara">Sementara</option>
-                                        <option value="Permanen">Permanen</option>
+                                        <option value="dikirim">Dikirim</option>
+                                        <option value="diterima">Diterima</option>
                                     </select>
                                     <InputError message={errors.status} className="mt-2" />
                                 </div>
                             </div>
+
                             <div className="mt-6 flex justify-end space-x-3">
                                 <button
                                     type="button"
@@ -175,7 +175,7 @@ export default function OutgoingGoods({ auth, goods = [] }) {
                                 >
                                     Batal
                                 </button>
-                                <PrimaryButton disabled={processing} type="submit">
+                                <PrimaryButton disabled={processing}>
                                     Simpan
                                 </PrimaryButton>
                             </div>
@@ -185,4 +185,4 @@ export default function OutgoingGoods({ auth, goods = [] }) {
             )}
         </AuthenticatedLayout>
     );
-} 
+}

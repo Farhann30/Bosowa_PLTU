@@ -1,9 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import { Card, CardContent } from '@/Components/ui/card';
 
 export default function Soc({ auth }) {
-    // Contoh daftar dokumen SOC
     const documents = [
         {
             title: 'SOP Penanganan Insiden Keamanan',
@@ -20,28 +18,45 @@ export default function Soc({ auth }) {
             description: 'Tips dan panduan untuk mencegah phishing dan serangan email.',
             link: '/docs/soc/panduan-email-aman.pdf',
         },
-        // Tambahkan dokumen lain sesuai kebutuhan
     ];
 
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="SOC - Security Operations Center" />
-            <div className="py-12 min-h-screen flex justify-center bg-gray-50">
-                <div className="max-w-3xl w-full mx-auto space-y-8">
-                    <h1 className="text-3xl font-bold mb-4 text-center">Dokumen SOC (Security Operations Center)</h1>
-                    <p className="text-center text-gray-600 mb-8">Berikut adalah dokumen-dokumen penting terkait keamanan siber di lingkungan PLTU Bosowa.</p>
+            <Head title="Dokumen SOC" />
+            <div className="py-12">
+                <div className="max-w-4xl mx-auto sm:px-6 lg:px-8">
+                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div className="p-6">
+                            <div className="mb-8">
+                                <h1 className="text-2xl font-bold text-gray-900 mb-2">Dokumen SOC (Security Operations Center)</h1>
+                                <p className="text-gray-600">
+                                    Berikut adalah dokumen-dokumen penting terkait keamanan siber di lingkungan PLTU Bosowa.
+                                </p>
+                            </div>
 
-                    {documents.map((doc, idx) => (
-                        <Card key={idx}>
-                            <CardContent className="p-6">
-                                <h2 className="text-xl font-semibold mb-2">{doc.title}</h2>
-                                <p className="mb-4 text-gray-700">{doc.description}</p>
-                                <a href={doc.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">Lihat / Download</a>
-                            </CardContent>
-                        </Card>
-                    ))}
+                            <div className="space-y-6">
+                                {documents.map((doc, idx) => (
+                                    <div
+                                        key={idx}
+                                        className="border border-gray-200 rounded-lg p-5 bg-gray-50 hover:bg-white transition shadow-sm"
+                                    >
+                                        <h2 className="text-lg font-semibold text-gray-800 mb-2">{doc.title}</h2>
+                                        <p className="text-gray-700 mb-3">{doc.description}</p>
+                                        <a
+                                            href={doc.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-block px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 transition"
+                                        >
+                                            Lihat / Download
+                                        </a>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </AuthenticatedLayout>
     );
-} 
+}
