@@ -15,13 +15,13 @@ export default function PicDashboard({ auth, visits }) {
     const handleSearch = (e) => {
         const query = e.target.value;
         setSearchQuery(query);
-        
-        const filtered = visits.filter(visit => 
-            users.name.toLowerCase().includes(query.toLowerCase()) ||
+
+        const filtered = visits.filter(visit =>
+            visit.visitor_name.toLowerCase().includes(query.toLowerCase()) ||
             visit.phone_number.includes(query) ||
             visit.agenda.toLowerCase().includes(query.toLowerCase())
         );
-        
+
         setFilteredVisits(filtered);
     };
 
@@ -30,7 +30,6 @@ export default function PicDashboard({ auth, visits }) {
             const response = await axios.post(`/api/visits/${visitId}/approve`);
             if (response.data.success) {
                 toast.success('Kunjungan berhasil disetujui');
-                // Refresh halaman untuk update data
                 window.location.reload();
             }
         } catch (error) {
@@ -43,7 +42,6 @@ export default function PicDashboard({ auth, visits }) {
             const response = await axios.post(`/api/visits/${visitId}/reject`);
             if (response.data.success) {
                 toast.success('Kunjungan berhasil ditolak');
-                // Refresh halaman untuk update data
                 window.location.reload();
             }
         } catch (error) {
@@ -68,64 +66,74 @@ export default function PicDashboard({ auth, visits }) {
         <PicLayout user={auth.user}>
             <Head title="Dashboard PIC" />
 
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div className="py-10">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <Card>
                         <CardContent className="p-6">
-                            <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-2xl font-semibold">Daftar Kunjungan</h2>
-                                <div className="w-1/3">
-                                    <Input
-                                        type="text"
-                                        placeholder="Cari kunjungan..."
-                                        value={searchQuery}
-                                        onChange={handleSearch}
-                                    />
-                                </div>
+                            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                                <h2 className="text-2xl font-semibold text-gray-800">Daftar Kunjungan</h2>
+                                <Input
+                                    type="text"
+                                    placeholder="Cari nama, nomor, atau agenda..."
+                                    value={searchQuery}
+                                    onChange={handleSearch}
+                                    className="md:w-1/3"
+                                />
                             </div>
 
-                            <div className="rounded-md border">
+                            <div className="rounded-md border overflow-x-auto">
                                 <Table>
                                     <TableHeader>
                                         <TableRow>
-                                            <TableHead>Tanggal</TableHead>
-                                            <TableHead>Nama Pengunjung</TableHead>
-                                            <TableHead>Agenda</TableHead>
-                                            <TableHead>Status</TableHead>
-                                            <TableHead>Aksi</TableHead>
+                                            <TableHead className="min-w-[120px]">Tanggal</TableHead>
+                                            <TableHead className="min-w-[160px]">Email Pengunjung</TableHead>
+                                            <TableHead className="min-w-[200px]">Agenda</TableHead>
+                                            <TableHead className="min-w-[120px]">Status</TableHead>
+                                            <TableHead className="min-w-[150px]">Aksi</TableHead>
                                         </TableRow>
                                     </TableHeader>
+
                                     <TableBody>
-                                        {filteredVisits.map((visit) => (
-                                            <TableRow key={visit.id}>
-                                                <TableCell>
-                                                    {new Date(visit.visit_date).toLocaleDateString('id-ID')}
-                                                </TableCell>
-                                                <TableCell>{visit.name}</TableCell>
-                                                <TableCell>{visit.agenda}</TableCell>
-                                                <TableCell>{getStatusBadge(visit.status)}</TableCell>
-                                                <TableCell>
-                                                    {visit.status === 'pending' && (
-                                                        <div className="flex gap-2">
-                                                            <Button
-                                                                variant="success"
-                                                                size="sm"
-                                                                onClick={() => handleApprove(visit.id)}
-                                                            >
-                                                                Setujui
-                                                            </Button>
-                                                            <Button
-                                                                variant="destructive"
-                                                                size="sm"
-                                                                onClick={() => handleReject(visit.id)}
-                                                            >
-                                                                Tolak
-                                                            </Button>
-                                                        </div>
-                                                    )}
+                                        {filteredVisits.length > 0 ? (
+                                            filteredVisits.map((visit) => (
+                                                <TableRow key={visit.id}>
+                                                    <TableCell>
+                                                        {new Date(visit.visit_date).toLocaleDateString('id-ID')}
+                                                    </TableCell>
+                                                    <TableCell>{visit.email}</TableCell>
+                                                    <TableCell>{visit.agenda}</TableCell>
+                                                    <TableCell>{getStatusBadge(visit.status)}</TableCell>
+                                                    <TableCell>
+                                                        {visit.status === 'pending' ? (
+                                                            <div className="flex gap-2">
+                                                                <Button
+                                                                    variant="success"
+                                                                    size="sm"
+                                                                    onClick={() => handleApprove(visit.id)}
+                                                                >
+                                                                    Setujui
+                                                                </Button>
+                                                                <Button
+                                                                    variant="destructive"
+                                                                    size="sm"
+                                                                    onClick={() => handleReject(visit.id)}
+                                                                >
+                                                                    Tolak
+                                                                </Button>
+                                                            </div>
+                                                        ) : (
+                                                            <span className="text-sm text-gray-400">-</span>
+                                                        )}
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))
+                                        ) : (
+                                            <TableRow>
+                                                <TableCell colSpan="5" className="text-center py-6 text-gray-500">
+                                                    Tidak ada kunjungan yang ditemukan.
                                                 </TableCell>
                                             </TableRow>
-                                        ))}
+                                        )}
                                     </TableBody>
                                 </Table>
                             </div>
@@ -135,4 +143,4 @@ export default function PicDashboard({ auth, visits }) {
             </div>
         </PicLayout>
     );
-} 
+}
