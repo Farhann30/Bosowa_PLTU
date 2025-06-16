@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import GuestLayout from '@/Layouts/GuestLayout';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
+import InputLabel from '@/Components/InputLabel';
+import InputError from '@/Components/InputError';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
 
@@ -12,7 +12,15 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
+        phone: '',
+        company_name: '',
+        company_id_card: '',
+        face_photo: null,
+        id_card_photo: null,
+        company_id_card_photo: null,
+        agree: false,
     });
+    const [step, setStep] = useState(1);
 
     useEffect(() => {
         return () => {
@@ -20,15 +28,216 @@ export default function Register() {
         };
     }, []);
 
+    const handleFileChange = (e, field) => {
+        const file = e.target.files[0];
+        setData(field, file);
+    };
+
+    const nextStep = (e) => {
+        e.preventDefault();
+        setStep(step + 1);
+    };
+    const prevStep = (e) => {
+        e.preventDefault();
+        setStep(step - 1);
+    };
+
     const submit = (e) => {
         e.preventDefault();
         post(route('register'));
     };
 
+    // STEP 1: Data Diri
+    const renderStep1 = () => (
+        <>
+            <div>
+                <InputLabel htmlFor="name" value="Nama Lengkap" />
+                <TextInput
+                    id="name"
+                    name="name"
+                    value={data.name}
+                    placeholder="Nama Lengkap"
+                    className="mt-1 block w-full rounded-3xl"
+                    autoComplete="name"
+                    isFocused={true}
+                    onChange={(e) => setData('name', e.target.value)}
+                    required
+                />
+                <InputError message={errors.name} className="mt-2" />
+            </div>
+            <div className="mt-4">
+                <InputLabel htmlFor="email" value="Alamat Email" />
+                <TextInput
+                    id="email"
+                    type="email"
+                    name="email"
+                    value={data.email}
+                    className="mt-1 block w-full rounded-3xl"
+                    autoComplete="username"
+                    placeholder="youremail@gmail.com"
+                    onChange={(e) => setData('email', e.target.value)}
+                    required
+                />
+                <InputError message={errors.email} className="mt-2" />
+            </div>
+            <div className="mt-4">
+                <InputLabel htmlFor="phone" value="Nomor Telepon" />
+                <TextInput
+                    id="phone"
+                    type="tel"
+                    name="phone"
+                    value={data.phone}
+                    className="mt-1 block w-full rounded-3xl"
+                    placeholder="081234567890"
+                    onChange={(e) => setData('phone', e.target.value)}
+                    required
+                />
+                <InputError message={errors.phone} className="mt-2" />
+            </div>
+            <div className="mt-4">
+                <InputLabel htmlFor="company_name" value="Nama Perusahaan" />
+                <TextInput
+                    id="company_name"
+                    name="company_name"
+                    value={data.company_name}
+                    className="mt-1 block w-full rounded-3xl"
+                    placeholder="Nama Perusahaan"
+                    onChange={(e) => setData('company_name', e.target.value)}
+                    required
+                />
+                <InputError message={errors.company_name} className="mt-2" />
+            </div>
+            <div className="mt-4">
+                <InputLabel htmlFor="company_id_card" value="Nomor Kartu Identitas Perusahaan" />
+                <TextInput
+                    id="company_id_card"
+                    name="company_id_card"
+                    value={data.company_id_card}
+                    className="mt-1 block w-full rounded-3xl"
+                    placeholder="Nomor Kartu Identitas Perusahaan"
+                    onChange={(e) => setData('company_id_card', e.target.value)}
+                    required
+                />
+                <InputError message={errors.company_id_card} className="mt-2" />
+            </div>
+        </>
+    );
+
+    // STEP 2: Upload Foto
+    const renderStep2 = () => (
+        <>
+            <div className="mb-4">
+                <InputLabel htmlFor="face_photo" value="Foto Wajah (Selfie)" />
+                <div className="flex items-center gap-4">
+                    <input
+                        type="file"
+                        id="face_photo"
+                        name="face_photo"
+                        accept="image/*"
+                        className="mt-1 block w-full"
+                        onChange={(e) => handleFileChange(e, 'face_photo')}
+                        required
+                    />
+                    <img src="/images/selfie.png" alt="Contoh Selfie" className="w-20 h-20 object-cover rounded-lg border" />
+                </div>
+                <span className="text-xs text-gray-500">Sertakan foto selfie anda, pastikan foto terlihat jelas</span>
+                <InputError message={errors.face_photo} className="mt-2" />
+            </div>
+            <div className="mb-4">
+                <InputLabel htmlFor="id_card_photo" value="Foto KTP" />
+                <div className="flex items-center gap-4">
+                    <input
+                        type="file"
+                        id="id_card_photo"
+                        name="id_card_photo"
+                        accept="image/*"
+                        className="mt-1 block w-full"
+                        onChange={(e) => handleFileChange(e, 'id_card_photo')}
+                        required
+                    />
+                    <img src="/images/IDCARD.jpeg" alt="Contoh KTP" className="w-20 h-20 object-cover rounded-lg border" />
+                </div>
+                <span className="text-xs text-gray-500">Foto KTP harus terlihat jelas</span>
+                <InputError message={errors.id_card_photo} className="mt-2" />
+            </div>
+            <div className="mb-4">
+                <InputLabel htmlFor="company_id_card_photo" value="Foto Kartu Identitas Perusahaan" />
+                <div className="flex items-center gap-4">
+                    <input
+                        type="file"
+                        id="company_id_card_photo"
+                        name="company_id_card_photo"
+                        accept="image/*"
+                        className="mt-1 block w-full"
+                        onChange={(e) => handleFileChange(e, 'company_id_card_photo')}
+                        required
+                    />
+                    <img src="/images/contoh_kartu_perusahaan.jpg" alt="Contoh Kartu Perusahaan" className="w-20 h-20 object-cover rounded-lg border" />
+                </div>
+                <span className="text-xs text-gray-500">Foto kartu identitas perusahaan harus terlihat jelas</span>
+                <InputError message={errors.company_id_card_photo} className="mt-2" />
+            </div>
+        </>
+    );
+
+    // STEP 3: Ketentuan & Password
+    const renderStep3 = () => (
+        <>
+            <div className="space-y-4">
+                <h2 className="text-lg font-bold">Syarat & Ketentuan</h2>
+                <ul className="list-disc pl-6 text-sm text-gray-700">
+                    <li>Data yang Anda masukkan harus benar dan dapat dipertanggungjawabkan.</li>
+                    <li>Foto yang diunggah harus jelas dan sesuai dengan identitas Anda.</li>
+                    <li>Setelah mendaftar, akun Anda akan diverifikasi oleh admin.</li>
+                    <li>Jika data tidak valid, akun dapat ditolak.</li>
+                </ul>
+                <div className="flex items-center gap-2 mt-4">
+                    <input
+                        type="checkbox"
+                        id="agree"
+                        checked={data.agree || false}
+                        onChange={e => setData('agree', e.target.checked)}
+                        required
+                    />
+                    <label htmlFor="agree" className="text-sm">Saya menyetujui syarat & ketentuan di atas</label>
+                </div>
+            </div>
+            <div className="mt-4">
+                <InputLabel htmlFor="password" value="Kata Sandi" />
+                <TextInput
+                    id="password"
+                    type="password"
+                    name="password"
+                    value={data.password}
+                    className="mt-1 block w-full rounded-3xl"
+                    autoComplete="new-password"
+                    placeholder="password123"
+                    onChange={(e) => setData('password', e.target.value)}
+                    required
+                />
+                <InputError message={errors.password} className="mt-2" />
+            </div>
+            <div className="mt-4">
+                <InputLabel htmlFor="password_confirmation" value="Konfirmasi Kata Sandi" />
+                <TextInput
+                    id="password_confirmation"
+                    type="password"
+                    name="password_confirmation"
+                    placeholder="password123"
+                    value={data.password_confirmation}
+                    className="mt-1 block w-full rounded-3xl"
+                    autoComplete="new-password"
+                    onChange={(e) => setData('password_confirmation', e.target.value)}
+                    required
+                />
+                <InputError message={errors.password_confirmation} className="mt-2" />
+            </div>
+        </>
+    );
+
     return (
         <>
             <Head title="Daftar - Buku Tamu" />
-
             <div
                 className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden"
                 style={{
@@ -38,94 +247,32 @@ export default function Register() {
                     backgroundRepeat: "no-repeat"
                 }}
             >
-                <div className="w-full max-w-md p-8 relative z-10 bg-white/80 rounded-xl shadow-lg backdrop-blur-md">
+                <div className="w-full max-w-2xl p-8 relative z-10 bg-white/80 rounded-xl shadow-lg backdrop-blur-md overflow-auto" style={{maxHeight: '90vh'}}>
                     <div className="text-left mb-8">
                         <img src="/images/logo bosowa.png" alt="BSW Logo" className="w-40 mb-4 drop-shadow-lg" />
                         <h1 className="text-2xl font-bold text-gray-900">Daftar</h1>
                         <p className="text-gray-700 mt-2">Buat akun baru untuk mengakses buku tamu</p>
                     </div>
-
-                    <form onSubmit={submit}>
-                        <div>
-                            <InputLabel htmlFor="name" value="Nama Lengkap" />
-
-                            <TextInput
-                                id="name"
-                                name="name"
-                                value={data.name}
-                                placeholder="Nama Lengkap"
-                                className="mt-1 block w-full rounded-3xl"
-                                autoComplete="name"
-                                isFocused={true}
-                                onChange={(e) => setData('name', e.target.value)}
-                                required
-                            />
-
-                            <InputError message={errors.name} className="mt-2" />
+                    <form onSubmit={step === 3 ? submit : nextStep} encType="multipart/form-data">
+                        {step === 1 && renderStep1()}
+                        {step === 2 && renderStep2()}
+                        {step === 3 && renderStep3()}
+                        <div className="flex justify-between mt-8">
+                            {step > 1 && (
+                                <button type="button" onClick={prevStep} className="rounded-3xl px-6 py-2 bg-gray-300 text-gray-700 hover:bg-gray-400">Kembali</button>
+                            )}
+                            {step < 3 && (
+                                <PrimaryButton className="rounded-3xl px-6" disabled={processing} type="submit">
+                                    Selanjutnya
+                                </PrimaryButton>
+                            )}
+                            {step === 3 && (
+                                <PrimaryButton className="rounded-3xl px-6" disabled={processing || !data.agree} type="submit">
+                                    {processing ? 'Memproses...' : 'Daftar'}
+                                </PrimaryButton>
+                            )}
                         </div>
-
-                        <div className="mt-4">
-                            <InputLabel htmlFor="email" value="Alamat Email" />
-
-                            <TextInput
-                                id="email"
-                                type="email"
-                                name="email"
-                                value={data.email}
-                                className="mt-1 block w-full rounded-3xl"
-                                autoComplete="username"
-                                placeholder="youremail@gmail.com"
-                                onChange={(e) => setData('email', e.target.value)}
-                                required
-                            />
-
-                            <InputError message={errors.email} className="mt-2" />
-                        </div>
-
-                        <div className="mt-4">
-                            <InputLabel htmlFor="password" value="Kata Sandi" />
-
-                            <TextInput
-                                id="password"
-                                type="password"
-                                name="password"
-                                value={data.password}
-                                className="mt-1 block w-full rounded-3xl"
-                                autoComplete="new-password"
-                                placeholder="password123"
-                                onChange={(e) => setData('password', e.target.value)}
-                                required
-                            />
-
-                            <InputError message={errors.password} className="mt-2" />
-                        </div>
-
-                        <div className="mt-4">
-                            <InputLabel htmlFor="password_confirmation" value="Konfirmasi Kata Sandi" />
-
-                            <TextInput
-                                id="password_confirmation"
-                                type="password"
-                                name="password_confirmation"
-                                placeholder="password123"
-                                value={data.password_confirmation}
-                                className="mt-1 block w-full rounded-3xl"
-                                autoComplete="new-password"
-                                onChange={(e) => setData('password_confirmation', e.target.value)}
-                                required
-                            />
-
-                            <InputError message={errors.password_confirmation} className="mt-2" />
-                        </div>
-
-                        <div className="mt-6">
-                            <PrimaryButton className="w-full justify-center rounded-3xl bg-red-600 hover:bg-red-700" disabled={processing}>
-                                {processing ? 'Memproses...' : 'Daftar'}
-                            </PrimaryButton>
-                        </div>
-
                         <div className="my-6 border-t border-gray-300"></div>
-
                         <div className="mt-6">
                             <p className="text-sm text-gray-700 mb-2">Sudah punya akun?</p>
                             <Link href={route('login')}>
