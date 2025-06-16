@@ -27,7 +27,8 @@ class User extends Authenticatable
         'face_photo',
         'id_card_photo',
         'company_id_card_photo',
-        'verification_status'
+        'verification_status',
+        'face_photo_blob',
     ];
 
     /**

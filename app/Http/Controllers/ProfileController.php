@@ -29,13 +29,30 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // Ambil field satu per satu
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        // Simpan foto wajah ke blob jika ada
+        if ($request->hasFile('face_photo_blob')) {
+            $user->face_photo_blob = file_get_contents($request->file('face_photo_blob'));
+        }
+        // Simpan foto KTP jika ada
+        if ($request->hasFile('id_card_photo')) {
+            $user->id_card_photo = $request->file('id_card_photo')->store('verification/id_cards', 'public');
+        }
+        // Simpan foto kartu perusahaan jika ada
+        if ($request->hasFile('company_id_card_photo')) {
+            $user->company_id_card_photo = $request->file('company_id_card_photo')->store('verification/company_cards', 'public');
+        }
+
+        $user->save();
 
         return Redirect::route('profile.edit');
     }

@@ -14,7 +14,7 @@ export default function OutgoingGoods({ auth, goods = [] }) {
         quantity: '',
         receiver: '',
         date: '',
-        status: '',
+        keterangan: '',
     });
 
     const handleSubmit = (e) => {
@@ -51,7 +51,7 @@ export default function OutgoingGoods({ auth, goods = [] }) {
                                             <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
                                             <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Penerima</th>
                                             <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                                            <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                            <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
@@ -68,7 +68,7 @@ export default function OutgoingGoods({ auth, goods = [] }) {
                                                     <td className="px-6 py-4 text-sm text-gray-900">{item.quantity}</td>
                                                     <td className="px-6 py-4 text-sm text-gray-900">{item.receiver}</td>
                                                     <td className="px-6 py-4 text-sm text-gray-900">{item.date}</td>
-                                                    <td className="px-6 py-4 text-sm text-gray-900">{item.status}</td>
+                                                    <td className="px-6 py-4 text-sm text-gray-900">{item.keterangan}</td>
                                                 </tr>
                                             ))
                                         )}
@@ -151,19 +151,19 @@ export default function OutgoingGoods({ auth, goods = [] }) {
                                 </div>
 
                                 <div>
-                                    <InputLabel htmlFor="status" value="Status" />
+                                    <InputLabel htmlFor="keterangan" value="Keterangan" />
                                     <select
-                                        id="status"
-                                        value={data.status}
-                                        onChange={(e) => setData('status', e.target.value)}
+                                        id="keterangan"
+                                        value={data.keterangan}
+                                        onChange={(e) => setData('keterangan', e.target.value)}
                                         className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-red-500 focus:ring-red-500"
                                         required
                                     >
-                                        <option value="">Pilih Status</option>
-                                        <option value="dikirim">Dikirim</option>
-                                        <option value="diterima">Diterima</option>
+                                        <option value="">Pilih Keterangan</option>
+                                        <option value="Sementara">Sementara</option>
+                                        <option value="Permanen">Permanen</option>
                                     </select>
-                                    <InputError message={errors.status} className="mt-2" />
+                                    <InputError message={errors.keterangan} className="mt-2" />
                                 </div>
                             </div>
 
