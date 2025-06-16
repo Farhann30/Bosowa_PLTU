@@ -43,10 +43,10 @@ class RegisteredUserController extends Controller
             'company_id_card_photo' => 'required|image|max:2048',
         ]);
 
-        // Handle file uploads
-        $facePhotoPath = $request->file('face_photo')->store('verification/face_photos', 'public');
-        $idCardPhotoPath = $request->file('id_card_photo')->store('verification/id_cards', 'public');
-        $companyIdCardPhotoPath = $request->file('company_id_card_photo')->store('verification/company_cards', 'public');
+        // Handle file uploads ke BLOB
+        $facePhotoBlob = file_get_contents($request->file('face_photo'));
+        $idCardPhotoBlob = file_get_contents($request->file('id_card_photo'));
+        $companyIdCardPhotoBlob = file_get_contents($request->file('company_id_card_photo'));
 
         $user = User::create([
             'name' => $request->name,
@@ -55,9 +55,9 @@ class RegisteredUserController extends Controller
             'phone' => $request->phone,
             'company_name' => $request->company_name,
             'company_id_card' => $request->company_id_card,
-            'face_photo' => $facePhotoPath,
-            'id_card_photo' => $idCardPhotoPath,
-            'company_id_card_photo' => $companyIdCardPhotoPath,
+            'face_photo_blob' => $facePhotoBlob,
+            'id_card_photo_blob' => $idCardPhotoBlob,
+            'company_id_card_photo_blob' => $companyIdCardPhotoBlob,
             'verification_status' => 'pending'
         ]);
 

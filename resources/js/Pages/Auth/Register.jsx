@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import PrimaryButton from '@/Components/PrimaryButton';
 import InputLabel from '@/Components/InputLabel';
 import InputError from '@/Components/InputError';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { FaUpload } from 'react-icons/fa';
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -21,6 +22,15 @@ export default function Register() {
         agree: false,
     });
     const [step, setStep] = useState(1);
+    const [preview, setPreview] = useState({
+        face_photo: null,
+        id_card_photo: null,
+        company_id_card_photo: null,
+    });
+    const facePhotoRef = useRef();
+    const idCardPhotoRef = useRef();
+    const companyIdCardPhotoRef = useRef();
+    const [alert, setAlert] = useState("");
 
     useEffect(() => {
         return () => {
@@ -31,10 +41,22 @@ export default function Register() {
     const handleFileChange = (e, field) => {
         const file = e.target.files[0];
         setData(field, file);
+        if (file) {
+            setPreview((prev) => ({ ...prev, [field]: URL.createObjectURL(file) }));
+        } else {
+            setPreview((prev) => ({ ...prev, [field]: null }));
+        }
     };
 
     const nextStep = (e) => {
         e.preventDefault();
+        if (step === 2) {
+            if (!data.face_photo || !data.id_card_photo) {
+                setAlert("Foto wajah dan foto KTP wajib diisi untuk melanjutkan ke step berikutnya.");
+                return;
+            }
+        }
+        setAlert("");
         setStep(step + 1);
     };
     const prevStep = (e) => {
@@ -126,53 +148,118 @@ export default function Register() {
     // STEP 2: Upload Foto
     const renderStep2 = () => (
         <>
+            {alert && (
+                <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg font-semibold animate-pulse">
+                    {alert}
+                </div>
+            )}
             <div className="mb-4">
                 <InputLabel htmlFor="face_photo" value="Foto Wajah (Selfie)" />
-                <div className="flex items-center gap-4">
-                    <input
-                        type="file"
-                        id="face_photo"
-                        name="face_photo"
-                        accept="image/*"
-                        className="mt-1 block w-full"
-                        onChange={(e) => handleFileChange(e, 'face_photo')}
-                        required
-                    />
-                    <img src="/images/selfie.png" alt="Contoh Selfie" className="w-20 h-20 object-cover rounded-lg border" />
+                <div className="flex items-center gap-8">
+                    {/* Kiri: Preview hasil upload dan tombol upload */}
+                    <div className="flex flex-col items-center justify-center">
+                        <div className="inline-block rounded-lg overflow-hidden w-64 h-64 bg-transparent flex flex-col items-center justify-center border border-dashed border-gray-300 mb-2">
+                            {preview.face_photo ? (
+                                <img src={preview.face_photo} alt="Preview Selfie" className="w-full h-full object-contain" />
+                            ) : (
+                                <span className="text-gray-400">Belum ada foto</span>
+                            )}
+                        </div>
+                        <button
+                            type="button"
+                            className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg font-semibold shadow hover:bg-red-700 transition cursor-pointer mt-2"
+                            onClick={() => facePhotoRef.current && facePhotoRef.current.click()}
+                        >
+                            <FaUpload className="mr-2" /> Upload Foto
+                        </button>
+                        <input
+                            type="file"
+                            id="face_photo"
+                            name="face_photo"
+                            accept="image/*"
+                            className="hidden"
+                            ref={facePhotoRef}
+                            onChange={(e) => handleFileChange(e, 'face_photo')}
+                        />
+                    </div>
+                    {/* Kanan: Contoh gambar */}
+                    <div className="inline-block rounded-lg overflow-hidden w-64 h-64 bg-transparent flex flex-col items-center justify-center ml-auto">
+                        <img src="/images/selfie.png" alt="Contoh Selfie" className="w-full h-full object-contain" />
+                    </div>
                 </div>
                 <span className="text-xs text-gray-500">Sertakan foto selfie anda, pastikan foto terlihat jelas</span>
                 <InputError message={errors.face_photo} className="mt-2" />
             </div>
             <div className="mb-4">
                 <InputLabel htmlFor="id_card_photo" value="Foto KTP" />
-                <div className="flex items-center gap-4">
-                    <input
-                        type="file"
-                        id="id_card_photo"
-                        name="id_card_photo"
-                        accept="image/*"
-                        className="mt-1 block w-full"
-                        onChange={(e) => handleFileChange(e, 'id_card_photo')}
-                        required
-                    />
-                    <img src="/images/IDCARD.jpeg" alt="Contoh KTP" className="w-20 h-20 object-cover rounded-lg border" />
+                <div className="flex items-center gap-8">
+                    {/* Kiri: Preview hasil upload dan tombol upload */}
+                    <div className="flex flex-col items-center justify-center">
+                        <div className="inline-block rounded-lg overflow-hidden w-64 h-64 bg-transparent flex flex-col items-center justify-center border border-dashed border-gray-300 mb-2">
+                            {preview.id_card_photo ? (
+                                <img src={preview.id_card_photo} alt="Preview KTP" className="w-full h-full object-contain" />
+                            ) : (
+                                <span className="text-gray-400">Belum ada foto</span>
+                            )}
+                        </div>
+                        <button
+                            type="button"
+                            className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg font-semibold shadow hover:bg-red-700 transition cursor-pointer mt-2"
+                            onClick={() => idCardPhotoRef.current && idCardPhotoRef.current.click()}
+                        >
+                            <FaUpload className="mr-2" /> Upload KTP
+                        </button>
+                        <input
+                            type="file"
+                            id="id_card_photo"
+                            name="id_card_photo"
+                            accept="image/*"
+                            className="hidden"
+                            ref={idCardPhotoRef}
+                            onChange={(e) => handleFileChange(e, 'id_card_photo')}
+                        />
+                    </div>
+                    {/* Kanan: Contoh gambar */}
+                    <div className="inline-block rounded-lg overflow-hidden w-64 h-64 bg-transparent flex flex-col items-center justify-center ml-auto">
+                        <img src="/images/IDCARD.jpeg" alt="Contoh KTP" className="w-full h-full object-contain" />
+                    </div>
                 </div>
                 <span className="text-xs text-gray-500">Foto KTP harus terlihat jelas</span>
                 <InputError message={errors.id_card_photo} className="mt-2" />
             </div>
             <div className="mb-4">
                 <InputLabel htmlFor="company_id_card_photo" value="Foto Kartu Identitas Perusahaan" />
-                <div className="flex items-center gap-4">
-                    <input
-                        type="file"
-                        id="company_id_card_photo"
-                        name="company_id_card_photo"
-                        accept="image/*"
-                        className="mt-1 block w-full"
-                        onChange={(e) => handleFileChange(e, 'company_id_card_photo')}
-                        required
-                    />
-                    <img src="/images/contoh_kartu_perusahaan.jpg" alt="Contoh Kartu Perusahaan" className="w-20 h-20 object-cover rounded-lg border" />
+                <div className="flex items-center gap-8">
+                    {/* Kiri: Preview hasil upload dan tombol upload */}
+                    <div className="flex flex-col items-center justify-center">
+                        <div className="inline-block rounded-lg overflow-hidden w-64 h-64 bg-transparent flex flex-col items-center justify-center border border-dashed border-gray-300 mb-2">
+                            {preview.company_id_card_photo ? (
+                                <img src={preview.company_id_card_photo} alt="Preview Kartu Perusahaan" className="w-full h-full object-contain" />
+                            ) : (
+                                <span className="text-gray-400">Belum ada foto</span>
+                            )}
+                        </div>
+                        <button
+                            type="button"
+                            className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg font-semibold shadow hover:bg-red-700 transition cursor-pointer mt-2"
+                            onClick={() => companyIdCardPhotoRef.current && companyIdCardPhotoRef.current.click()}
+                        >
+                            <FaUpload className="mr-2" /> Upload Kartu Perusahaan
+                        </button>
+                        <input
+                            type="file"
+                            id="company_id_card_photo"
+                            name="company_id_card_photo"
+                            accept="image/*"
+                            className="hidden"
+                            ref={companyIdCardPhotoRef}
+                            onChange={(e) => handleFileChange(e, 'company_id_card_photo')}
+                        />
+                    </div>
+                    {/* Kanan: Contoh gambar */}
+                    <div className="inline-block rounded-lg overflow-hidden w-64 h-64 bg-transparent flex flex-col items-center justify-center ml-auto">
+                        <img src="/images/idcardcompany.png" alt="Contoh Kartu Perusahaan" className="w-full h-full object-contain" />
+                    </div>
                 </div>
                 <span className="text-xs text-gray-500">Foto kartu identitas perusahaan harus terlihat jelas</span>
                 <InputError message={errors.company_id_card_photo} className="mt-2" />
@@ -247,7 +334,7 @@ export default function Register() {
                     backgroundRepeat: "no-repeat"
                 }}
             >
-                <div className="w-full max-w-2xl p-8 relative z-10 bg-white/80 rounded-xl shadow-lg backdrop-blur-md overflow-auto" style={{maxHeight: '90vh'}}>
+                <div className="w-full max-w-3xl p-8 relative z-10 bg-white/80 rounded-xl shadow-lg backdrop-blur-md overflow-auto" style={{maxHeight: '90vh'}}>
                     <div className="text-left mb-8">
                         <img src="/images/logo bosowa.png" alt="BSW Logo" className="w-40 mb-4 drop-shadow-lg" />
                         <h1 className="text-2xl font-bold text-gray-900">Daftar</h1>
@@ -287,3 +374,4 @@ export default function Register() {
         </>
     );
 }
+

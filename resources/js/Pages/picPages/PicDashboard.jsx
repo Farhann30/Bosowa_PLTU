@@ -86,8 +86,14 @@ export default function PicDashboard({ auth, visits }) {
                                     <TableHeader>
                                         <TableRow>
                                             <TableHead className="min-w-[120px]">Tanggal</TableHead>
-                                            <TableHead className="min-w-[160px]">Email Pengunjung</TableHead>
+                                            <TableHead className="min-w-[120px]">Waktu Mulai</TableHead>
+                                            <TableHead className="min-w-[120px]">Waktu Selesai</TableHead>
+                                            <TableHead className="min-w-[120px]">Jenis Gedung</TableHead>
+                                            <TableHead className="min-w-[120px]">Kategori</TableHead>
                                             <TableHead className="min-w-[200px]">Agenda</TableHead>
+                                            <TableHead className="min-w-[200px]">Catatan</TableHead>
+                                            <TableHead className="min-w-[120px]">Telepon</TableHead>
+                                            <TableHead className="min-w-[160px]">Email</TableHead>
                                             <TableHead className="min-w-[120px]">Status</TableHead>
                                             <TableHead className="min-w-[150px]">Aksi</TableHead>
                                         </TableRow>
@@ -100,8 +106,14 @@ export default function PicDashboard({ auth, visits }) {
                                                     <TableCell>
                                                         {new Date(visit.visit_date).toLocaleDateString('id-ID')}
                                                     </TableCell>
-                                                    <TableCell>{visit.email}</TableCell>
+                                                    <TableCell>{visit.visit_time_start}</TableCell>
+                                                    <TableCell>{visit.visit_time_end}</TableCell>
+                                                    <TableCell>{visit.building_type}</TableCell>
+                                                    <TableCell>{visit.building_category}</TableCell>
                                                     <TableCell>{visit.agenda}</TableCell>
+                                                    <TableCell>{visit.notes || '-'}</TableCell>
+                                                    <TableCell>{visit.phone}</TableCell>
+                                                    <TableCell>{visit.email}</TableCell>
                                                     <TableCell>{getStatusBadge(visit.status)}</TableCell>
                                                     <TableCell>
                                                         {visit.status === 'pending' ? (
@@ -129,7 +141,7 @@ export default function PicDashboard({ auth, visits }) {
                                             ))
                                         ) : (
                                             <TableRow>
-                                                <TableCell colSpan="5" className="text-center py-6 text-gray-500">
+                                                <TableCell colSpan="11" className="text-center py-6 text-gray-500">
                                                     Tidak ada kunjungan yang ditemukan.
                                                 </TableCell>
                                             </TableRow>
