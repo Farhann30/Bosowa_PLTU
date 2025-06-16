@@ -35,12 +35,30 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'phone' => 'required|string|max:20',
+            'company_name' => 'required|string|max:255',
+            'company_id_card' => 'required|string|max:255',
+            'face_photo' => 'required|image|max:2048',
+            'id_card_photo' => 'required|image|max:2048',
+            'company_id_card_photo' => 'required|image|max:2048',
         ]);
+
+        // Handle file uploads
+        $facePhotoPath = $request->file('face_photo')->store('verification/face_photos', 'public');
+        $idCardPhotoPath = $request->file('id_card_photo')->store('verification/id_cards', 'public');
+        $companyIdCardPhotoPath = $request->file('company_id_card_photo')->store('verification/company_cards', 'public');
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'phone' => $request->phone,
+            'company_name' => $request->company_name,
+            'company_id_card' => $request->company_id_card,
+            'face_photo' => $facePhotoPath,
+            'id_card_photo' => $idCardPhotoPath,
+            'company_id_card_photo' => $companyIdCardPhotoPath,
+            'verification_status' => 'pending'
         ]);
 
         event(new Registered($user));
