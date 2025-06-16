@@ -9,17 +9,10 @@ export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     // Dummy role, ganti sesuai implementasi role user jika ada
     const role = user.role || (user.email === 'admin@admin.com' ? 'Admin' : 'User');
-    const [darkMode, setDarkMode] = useState(false);
-
-    // Toggle dark mode
-    const toggleDarkMode = () => {
-        setDarkMode(!darkMode);
-        document.documentElement.classList.toggle('dark', !darkMode);
-    };
 
     return (
-        <div className={darkMode ? 'min-h-screen bg-gray-900 text-white' : 'min-h-screen bg-gray-100'}>
-            <nav className={darkMode ? 'bg-gray-800 border-b border-gray-700' : 'bg-white border-b border-gray-100'}>
+        <div className={'min-h-screen bg-gray-100'}>
+            <nav className={'bg-white border-b border-gray-100'}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16 items-center">
                         <div className="flex items-center space-x-8">
@@ -53,50 +46,59 @@ export default function Authenticated({ user, header, children }) {
                                     Visit List
                                 </NavLink>
                                 <NavLink 
-                                    href="#" 
-                                    className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-base font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out"
+                                    href={route('assets.index')} 
+                                    active={route().current('assets.index')}
+                                    className={({ isActive }) => 
+                                        (isActive
+                                            ? 'inline-flex items-center px-1 pt-1 border-b-2 border-red-500 text-base font-bold leading-5 text-red-700 bg-red-50 rounded-t transition duration-150 ease-in-out shadow-sm'
+                                            : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-base font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out')
+                                    }
                                 >
                                     Asset
                                 </NavLink>
                                 <NavLink 
-                                    href="#" 
-                                    className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-base font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out"
+                                    href={route('guest.help')} 
+                                    active={route().current('guest.help')}
+                                    className={({ isActive }) => 
+                                        (isActive
+                                            ? 'inline-flex items-center px-1 pt-1 border-b-2 border-red-500 text-base font-bold leading-5 text-red-700 bg-red-50 rounded-t transition duration-150 ease-in-out shadow-sm'
+                                            : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-base font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out')
+                                    }
                                 >
-                                    E-SIK
+                                    Bantuan
                                 </NavLink>
                                 <NavLink 
-                                    href="#" 
-                                    className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-base font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out"
+                                    href={route('guest.soc')} 
+                                    active={route().current('guest.soc')}
+                                    className={({ isActive }) => 
+                                        (isActive
+                                            ? 'inline-flex items-center px-1 pt-1 border-b-2 border-red-500 text-base font-bold leading-5 text-red-700 bg-red-50 rounded-t transition duration-150 ease-in-out shadow-sm'
+                                            : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-base font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out')
+                                    }
                                 >
                                     SOC
                                 </NavLink>
                                 <NavLink 
-                                    href="#" 
-                                    className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-base font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out"
+                                    href={route('guest.outgoing-goods')} 
+                                    active={route().current('guest.outgoing-goods')}
+                                    className={({ isActive }) => 
+                                        (isActive
+                                            ? 'inline-flex items-center px-1 pt-1 border-b-2 border-red-500 text-base font-bold leading-5 text-red-700 bg-red-50 rounded-t transition duration-150 ease-in-out shadow-sm'
+                                            : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-base font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out')
+                                    }
                                 >
-                                    Outgoing Goods
+                                    Barang Keluar
                                 </NavLink>
                             </div>
                         </div>
-                        {/* Greeting, dark mode toggle, dan profile */}
+                        {/* Greeting dan profile */}
                         <div className="flex items-center gap-6">
-                            <span className="hidden md:inline text-base font-semibold text-gray-700 dark:text-gray-200 animate-fade-in">Hai, <span className="text-red-600 dark:text-red-400">{user.name}</span>!</span>
-                            <button
-                                onClick={toggleDarkMode}
-                                className="rounded-full p-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
-                                title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-                            >
-                                {darkMode ? (
-                                    <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m8.66-13.66l-.71.71M4.05 19.95l-.71.71M21 12h1M3 12H2m16.66 4.66l-.71-.71M4.05 4.05l-.71-.71" /></svg>
-                                ) : (
-                                    <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z" /></svg>
-                                )}
-                            </button>
+                            <span className="hidden md:inline text-base font-semibold text-gray-700 animate-fade-in">Hai, <span className="text-red-600">{user.name}</span>!</span>
                             <div className="relative">
                                 <Dropdown>
                                     <Dropdown.Trigger>
-                                        <button type="button" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white group">
-                                            <div className="w-10 h-10 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center border-2 border-gray-300 dark:border-gray-500 group-hover:border-red-500 transition-transform duration-200 group-hover:scale-110 shadow-md">
+                                        <button type="button" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:text-gray-900 group">
+                                            <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center border-2 border-gray-300 group-hover:border-red-500 transition-transform duration-200 group-hover:scale-110 shadow-md">
                                                 <span className="text-lg font-bold">
                                                     {user.name.charAt(0).toUpperCase()}
                                                 </span>
@@ -130,7 +132,7 @@ export default function Authenticated({ user, header, children }) {
                 </div>
             </nav>
             {header && (
-                <header className={darkMode ? 'bg-gray-800 shadow' : 'bg-white shadow'}>
+                <header className={'bg-white shadow'}>
                     <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">{header}</div>
                 </header>
             )}
