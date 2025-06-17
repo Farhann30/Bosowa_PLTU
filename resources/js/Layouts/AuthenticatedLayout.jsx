@@ -60,17 +60,6 @@ export default function Authenticated({ user, header, children }) {
                                     Asset
                                 </NavLink>
                                 <NavLink 
-                                    href={route('guest.help')} 
-                                    active={route().current('guest.help')}
-                                    className={({ isActive }) => 
-                                        (isActive
-                                            ? 'inline-flex items-center px-1 pt-1 border-b-2 border-red-500 text-base font-bold leading-5 text-red-700 bg-red-50 rounded-t transition duration-150 ease-in-out shadow-sm'
-                                            : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-base font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out')
-                                    }
-                                >
-                                    Bantuan
-                                </NavLink>
-                                <NavLink 
                                     href={route('guest.soc')} 
                                     active={route().current('guest.soc')}
                                     className={({ isActive }) => 
@@ -91,6 +80,17 @@ export default function Authenticated({ user, header, children }) {
                                     }
                                 >
                                     Barang Keluar
+                                </NavLink>
+                                <NavLink 
+                                    href={route('guest.help')} 
+                                    active={route().current('guest.help')}
+                                    className={({ isActive }) => 
+                                        (isActive
+                                            ? 'inline-flex items-center px-1 pt-1 border-b-2 border-red-500 text-base font-bold leading-5 text-red-700 bg-red-50 rounded-t transition duration-150 ease-in-out shadow-sm'
+                                            : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-base font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out')
+                                    }
+                                >
+                                    Bantuan
                                 </NavLink>
                             </div>
                         </div>
@@ -154,9 +154,9 @@ export default function Authenticated({ user, header, children }) {
                             <Dropdown.Link href={route('dashboard')} className={route().current('dashboard') ? 'block px-4 py-2 text-sm text-gray-900 bg-gray-100' : 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'}>Home</Dropdown.Link>
                             <Dropdown.Link href={route('visits.index')} className={route().current('visits.index') ? 'block px-4 py-2 text-sm text-gray-900 bg-gray-100' : 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'}>Visit List</Dropdown.Link>
                             <Dropdown.Link href={route('assets.index')} className={route().current('assets.index') ? 'block px-4 py-2 text-sm text-gray-900 bg-gray-100' : 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'}>Asset</Dropdown.Link>
-                            <Dropdown.Link href={route('guest.help')} className={route().current('guest.help') ? 'block px-4 py-2 text-sm text-gray-900 bg-gray-100' : 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'}>Bantuan</Dropdown.Link>
                             <Dropdown.Link href={route('guest.soc')} className={route().current('guest.soc') ? 'block px-4 py-2 text-sm text-gray-900 bg-gray-100' : 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'}>SOC</Dropdown.Link>
                             <Dropdown.Link href={route('guest.outgoing-goods')} className={route().current('guest.outgoing-goods') ? 'block px-4 py-2 text-sm text-gray-900 bg-gray-100' : 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'}>Barang Keluar</Dropdown.Link>
+                            <Dropdown.Link href={route('guest.help')} className={route().current('guest.help') ? 'block px-4 py-2 text-sm text-gray-900 bg-gray-100' : 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'}>Bantuan</Dropdown.Link>
                         </Dropdown.Content>
                     </Dropdown>
                 </div>
