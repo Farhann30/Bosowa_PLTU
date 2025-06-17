@@ -56,17 +56,6 @@ export default function Homepage({ auth }) {
                                     <p className="mt-2 text-sm text-white/80">My asset</p>
                                 </Link>
 
-                                {/* Bantuan */}
-                                <Link href="/guest/help" className="block p-6 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition">
-                                    <div className="flex items-center mb-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 14v.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8s-9-3.582-9-8 4.03-8 9-8 9 3.582 9 8z" />
-                                        </svg>
-                                    </div>
-                                    <h2 className="text-xl font-semibold">Bantuan</h2>
-                                    <p className="mt-2 text-sm text-white/80">Help & FAQ</p>
-                                </Link>
-
                                 {/* SOC */}
                                 <Link href="/guest/soc" className="block p-6 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
                                     <div className="flex items-center mb-4">
@@ -87,6 +76,17 @@ export default function Homepage({ auth }) {
                                     </div>
                                     <h2 className="text-xl font-semibold">Barang Keluar</h2>
                                     <p className="mt-2 text-sm text-white/80">Outgoing Goods</p>
+                                </Link>
+
+                                 {/* Bantuan */}
+                                <Link href="/guest/help" className="block p-6 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition">
+                                    <div className="flex items-center mb-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 14v.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8s-9-3.582-9-8 4.03-8 9-8 9 3.582 9 8z" />
+                                        </svg>
+                                    </div>
+                                    <h2 className="text-xl font-semibold">Bantuan</h2>
+                                    <p className="mt-2 text-sm text-white/80">Help & FAQ</p>
                                 </Link>
                             </div>
                         </div>

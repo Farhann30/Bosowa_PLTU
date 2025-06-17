@@ -10,7 +10,7 @@ class OutgoingGoodController extends Controller
 {
     public function index()
     {
-        $goods = OutgoingGood::latest()->get();
+        $goods = OutgoingGood::where('user_id', auth()->id())->latest()->get();
         return Inertia::render('Guest/OutgoingGoods', [
             'goods' => $goods
         ]);
@@ -23,8 +23,9 @@ class OutgoingGoodController extends Controller
             'quantity' => 'required|integer|min:1',
             'receiver' => 'required|string|max:255',
             'date' => 'required|date',
-            'status' => 'required|string',
+            'keterangan' => 'required|string',
         ]);
+        $validated['user_id'] = auth()->id();
         OutgoingGood::create($validated);
         return redirect()->back()->with('success', 'Barang keluar berhasil ditambahkan');
     }

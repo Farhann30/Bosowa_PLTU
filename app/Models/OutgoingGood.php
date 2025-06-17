@@ -14,6 +14,7 @@ class OutgoingGood extends Model
         'quantity',
         'receiver',
         'date',
-        'status',
+        'keterangan',
+        'user_id',
     ];
 } 
