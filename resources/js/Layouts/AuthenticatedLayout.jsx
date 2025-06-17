@@ -13,16 +13,19 @@ export default function Authenticated({ user, header, children }) {
     return (
         <div className={'min-h-screen bg-gray-100'}>
             <nav className={'bg-white border-b border-gray-100'}>
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
                     <div className="flex justify-between h-16 items-center">
-                        <div className="flex items-center space-x-8">
-                            {/* Logo dengan efek hover */}
+                        {/* Left Section: Logo + Desktop Nav */}
+                        <div className="flex items-center">
+                            {/* Logo dengan efek hover, ukuran disesuaikan */}
                             <div className="shrink-0 flex items-center">
                                 <Link href="/">
-                                    <img src="/images/logo bosowa.png" className="h-8 transition-transform duration-200 hover:scale-110 hover:drop-shadow-lg" alt="Logo" />
+                                    <img src="/images/logo bosowa.png" className="h-6 sm:h-8 transition-transform duration-200 hover:scale-110 hover:drop-shadow-lg" alt="Logo" />
                                 </Link>
                             </div>
-                            <div className="flex space-x-4">
+
+                            {/* Desktop Navigation - Sembunyi di mobile, Tampil di desktop */}
+                            <div className="hidden sm:flex space-x-4 sm:ml-6">
                                 <NavLink 
                                     href={route('dashboard')} 
                                     active={route().current('dashboard')}
@@ -91,7 +94,8 @@ export default function Authenticated({ user, header, children }) {
                                 </NavLink>
                             </div>
                         </div>
-                        {/* Greeting dan profile */}
+
+                        {/* Right Section: Greeting + Profile Dropdown */}
                         <div className="flex items-center gap-6">
                             <span className="hidden md:inline text-base font-semibold text-gray-700 animate-fade-in">Hai, <span className="text-red-600">{user.name}</span>!</span>
                             <div className="relative">
@@ -131,6 +135,33 @@ export default function Authenticated({ user, header, children }) {
                     </div>
                 </div>
             </nav>
+
+            {/* Mobile Navigation Dropdown (Hamburger icon + menu) - DITARUH DI BAWAH NAV, HANYA MUNCUL DI MOBILE */}
+            <div className="sm:hidden bg-white border-b border-gray-100 py-2">
+                <div className="max-w-7xl mx-auto px-2 sm:px-4">
+                    <Dropdown>
+                        <Dropdown.Trigger>
+                            <button
+                                type="button"
+                                className="inline-flex items-center justify-center p-2 rounded-md bg-transparent text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-900 transition duration-300 ease-in-out transform hover:scale-110 hover:rotate-90 w-fit"
+                            >
+                                <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                            </button>
+                        </Dropdown.Trigger>
+                        <Dropdown.Content align="left" width="full" className="mt-2 p-2 bg-white rounded-md shadow-lg overflow-hidden">
+                            <Dropdown.Link href={route('dashboard')} className={route().current('dashboard') ? 'block px-4 py-2 text-sm text-gray-900 bg-gray-100' : 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'}>Home</Dropdown.Link>
+                            <Dropdown.Link href={route('visits.index')} className={route().current('visits.index') ? 'block px-4 py-2 text-sm text-gray-900 bg-gray-100' : 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'}>Visit List</Dropdown.Link>
+                            <Dropdown.Link href={route('assets.index')} className={route().current('assets.index') ? 'block px-4 py-2 text-sm text-gray-900 bg-gray-100' : 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'}>Asset</Dropdown.Link>
+                            <Dropdown.Link href={route('guest.help')} className={route().current('guest.help') ? 'block px-4 py-2 text-sm text-gray-900 bg-gray-100' : 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'}>Bantuan</Dropdown.Link>
+                            <Dropdown.Link href={route('guest.soc')} className={route().current('guest.soc') ? 'block px-4 py-2 text-sm text-gray-900 bg-gray-100' : 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'}>SOC</Dropdown.Link>
+                            <Dropdown.Link href={route('guest.outgoing-goods')} className={route().current('guest.outgoing-goods') ? 'block px-4 py-2 text-sm text-gray-900 bg-gray-100' : 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'}>Barang Keluar</Dropdown.Link>
+                        </Dropdown.Content>
+                    </Dropdown>
+                </div>
+            </div>
+
             {header && (
                 <header className={'bg-white shadow'}>
                     <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">{header}</div>
