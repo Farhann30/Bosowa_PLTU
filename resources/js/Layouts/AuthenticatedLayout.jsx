@@ -46,26 +46,35 @@ export default function Authenticated({ user, header, children }) {
                                     Visit List
                                 </NavLink>
                                 <NavLink 
-                                    href="#" 
-                                    className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out"
+                                    href={route('guest.asset')} 
+                                    active={route().current('guest.asset')}
+                                    className={({ isActive }) => 
+                                        isActive 
+                                            ? 'inline-flex items-center px-1 pt-1 border-b-2 border-red-500 text-sm font-medium leading-5 text-gray-900 focus:outline-none transition duration-150 ease-in-out'
+                                            : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out'
+                                    }
                                 >
                                     Asset
                                 </NavLink>
                                 <NavLink 
-                                    href="#" 
-                                    className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out"
-                                >
-                                    E-SIK
-                                </NavLink>
-                                <NavLink 
-                                    href="#" 
-                                    className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out"
+                                    href={route('guest.soc')} 
+                                    active={route().current('guest.soc')}
+                                    className={({ isActive }) => 
+                                        isActive 
+                                            ? 'inline-flex items-center px-1 pt-1 border-b-2 border-red-500 text-sm font-medium leading-5 text-gray-900 focus:outline-none transition duration-150 ease-in-out'
+                                            : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out'
+                                    }
                                 >
                                     SOC
                                 </NavLink>
                                 <NavLink 
-                                    href="#" 
-                                    className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out"
+                                    href={route('guest.outgoing-goods')} 
+                                    active={route().current('guest.outgoing-goods')}
+                                    className={({ isActive }) => 
+                                        isActive 
+                                            ? 'inline-flex items-center px-1 pt-1 border-b-2 border-red-500 text-sm font-medium leading-5 text-gray-900 focus:outline-none transition duration-150 ease-in-out'
+                                            : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out'
+                                    }
                                 >
                                     Outgoing Goods
                                 </NavLink>
