@@ -67,7 +67,7 @@ export default function Welcome({ auth }) {
                 </div>
                 {/* Konten utama kiri atas, responsif */}
                 <div className="absolute z-20 flex flex-col items-center md:items-start justify-center h-full p-4 sm:p-8 md:p-16 max-w-xs sm:max-w-md md:max-w-xl"
-                    style={{marginTop: '28vh', marginLeft: '2vw'}}
+                    style={{marginTop: '20vh', marginLeft: '2vw'}}
                 >
                     <h1 className="text-white text-2xl sm:text-3xl md:text-5xl font-bold mb-2 drop-shadow-lg text-center md:text-left" style={{lineHeight: '1.1'}}>
                         PLTU Bosowa Energi Guestbook
