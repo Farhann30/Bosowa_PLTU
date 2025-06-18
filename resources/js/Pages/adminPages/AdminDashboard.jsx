@@ -159,25 +159,25 @@ const AdminDashboard = ({ auth, visits, assets, goods, users }) => {
         if (!selectedUser) return null;
         return (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                <div className="bg-white rounded-lg p-6 max-w-lg w-full relative">
-                    <button className="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-2xl font-bold" onClick={() => setShowPhotoModal(false)}>&times;</button>
+                <div className="bg-white rounded-lg p-6 max-w-3xl w-full relative">
+                    <button type="button" className="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-2xl font-bold" onClick={() => setShowPhotoModal(false)}>&times;</button>
                     <h2 className="text-xl font-bold mb-4">Foto User: {selectedUser.name}</h2>
-                    <div className="flex flex-col gap-4 items-center">
-                        <div>
+                    <div className="flex flex-row gap-6 items-start justify-center">
+                        <div className="flex flex-col items-center">
                             <div className="font-semibold mb-1">Foto Wajah</div>
                             {selectedUser.face_photo_blob
                                 ? <img src={`data:image/jpeg;base64,${selectedUser.face_photo_blob}`} alt="Foto Wajah" className="w-40 h-40 object-contain rounded border" />
                                 : <div className="w-40 h-40 flex items-center justify-center bg-gray-100 text-gray-400 border rounded">Tidak ada foto</div>
                             }
                         </div>
-                        <div>
+                        <div className="flex flex-col items-center">
                             <div className="font-semibold mb-1">Foto KTP</div>
                             {selectedUser.id_card_photo_blob
                                 ? <img src={`data:image/jpeg;base64,${selectedUser.id_card_photo_blob}`} alt="Foto KTP" className="w-40 h-40 object-contain rounded border" />
                                 : <div className="w-40 h-40 flex items-center justify-center bg-gray-100 text-gray-400 border rounded">Tidak ada foto</div>
                             }
                         </div>
-                        <div>
+                        <div className="flex flex-col items-center">
                             <div className="font-semibold mb-1">Foto Kartu Perusahaan</div>
                             {selectedUser.company_id_card_photo_blob
                                 ? <img src={`data:image/jpeg;base64,${selectedUser.company_id_card_photo_blob}`} alt="Foto Kartu Perusahaan" className="w-40 h-40 object-contain rounded border" />
@@ -194,6 +194,7 @@ const AdminDashboard = ({ auth, visits, assets, goods, users }) => {
                         <div>No. Kartu Identitas Perusahaan: {selectedUser.company_id_card || '-'}</div>
                     </div>
                 </div>
+                <div className="fixed inset-0" onClick={() => setShowPhotoModal(false)} style={{zIndex: 40}} />
             </div>
         );
     };
