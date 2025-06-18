@@ -43,10 +43,10 @@ class RegisteredUserController extends Controller
             'company_id_card_photo' => 'required|image|max:2048',
         ]);
 
-        // Handle file uploads ke BLOB
-        $facePhotoBlob = file_get_contents($request->file('face_photo'));
-        $idCardPhotoBlob = file_get_contents($request->file('id_card_photo'));
-        $companyIdCardPhotoBlob = file_get_contents($request->file('company_id_card_photo'));
+        // Simpan file ke kolom BLOB
+        $facePhotoBlob = file_get_contents($request->file('face_photo')->getRealPath());
+        $idCardPhotoBlob = file_get_contents($request->file('id_card_photo')->getRealPath());
+        $companyIdCardPhotoBlob = file_get_contents($request->file('company_id_card_photo')->getRealPath());
 
         $user = User::create([
             'name' => $request->name,
