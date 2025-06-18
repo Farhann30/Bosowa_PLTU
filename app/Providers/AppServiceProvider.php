@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     {
         if(config('app.env') !== 'local')
         {
-            $url->forceSchema('https');
+            $url->forceScheme('https');
         }
 
         DB::listen(function ($query) {
