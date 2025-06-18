@@ -24,6 +24,13 @@ WORKDIR /var/www/html
 # Install dependencies Laravel
 RUN composer install --no-dev --optimize-autoloader
 
+# Install Node.js (gunakan versi LTS)
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs
+
+# Install dependencies frontend & build asset
+RUN npm install && npm run build
+
 # Copy konfigurasi Apache
 COPY .docker/vhost.conf /etc/apache2/sites-available/000-default.conf
 
