@@ -228,7 +228,7 @@ export default function Register() {
                 <InputError message={errors.id_card_photo} className="mt-2" />
             </div>
             <div className="mb-4">
-                <InputLabel htmlFor="company_id_card_photo" value="Foto Kartu Identitas Perusahaan" />
+                <InputLabel htmlFor="company_id_card_photo" value="Foto Kartu Identitas Perusahaan (Opsional)" />
                 <div className="flex items-center gap-8">
                     {/* Kiri: Preview hasil upload dan tombol upload */}
                     <div className="flex flex-col items-center justify-center">
@@ -261,7 +261,7 @@ export default function Register() {
                         <img src="/images/idcardcompany.png" alt="Contoh Kartu Perusahaan" className="w-full h-full object-contain" />
                     </div>
                 </div>
-                <span className="text-xs text-gray-500">Foto kartu identitas perusahaan harus terlihat jelas</span>
+                <span className="text-xs text-gray-500">Foto kartu identitas perusahaan <b>tidak wajib</b> diisi</span>
                 <InputError message={errors.company_id_card_photo} className="mt-2" />
             </div>
         </>

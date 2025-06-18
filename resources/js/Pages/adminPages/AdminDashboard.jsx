@@ -16,6 +16,7 @@ const AdminDashboard = ({ auth, visits, assets, goods, users }) => {
     const [searchUser, setSearchUser] = useState('');
     const [selectedUser, setSelectedUser] = useState(null);
     const [page, setPage] = useState('kunjungan'); // 'kunjungan' | 'user'
+    const [showPhotoModal, setShowPhotoModal] = useState(false);
 
     // Menyaring data kunjungan berdasarkan status
     const pendingVisits = visits.filter(visit => visit.status === "pending");
@@ -151,6 +152,50 @@ const AdminDashboard = ({ auth, visits, assets, goods, users }) => {
                 borderWidth: 1,
             },
         ],
+    };
+
+    // Modal untuk menampilkan 3 foto user
+    const renderPhotoModal = () => {
+        if (!selectedUser) return null;
+        return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="bg-white rounded-lg p-6 max-w-lg w-full relative">
+                    <button className="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-2xl font-bold" onClick={() => setShowPhotoModal(false)}>&times;</button>
+                    <h2 className="text-xl font-bold mb-4">Foto User: {selectedUser.name}</h2>
+                    <div className="flex flex-col gap-4 items-center">
+                        <div>
+                            <div className="font-semibold mb-1">Foto Wajah</div>
+                            {selectedUser.face_photo_blob
+                                ? <img src={`data:image/jpeg;base64,${selectedUser.face_photo_blob}`} alt="Foto Wajah" className="w-40 h-40 object-contain rounded border" />
+                                : <div className="w-40 h-40 flex items-center justify-center bg-gray-100 text-gray-400 border rounded">Tidak ada foto</div>
+                            }
+                        </div>
+                        <div>
+                            <div className="font-semibold mb-1">Foto KTP</div>
+                            {selectedUser.id_card_photo_blob
+                                ? <img src={`data:image/jpeg;base64,${selectedUser.id_card_photo_blob}`} alt="Foto KTP" className="w-40 h-40 object-contain rounded border" />
+                                : <div className="w-40 h-40 flex items-center justify-center bg-gray-100 text-gray-400 border rounded">Tidak ada foto</div>
+                            }
+                        </div>
+                        <div>
+                            <div className="font-semibold mb-1">Foto Kartu Perusahaan</div>
+                            {selectedUser.company_id_card_photo_blob
+                                ? <img src={`data:image/jpeg;base64,${selectedUser.company_id_card_photo_blob}`} alt="Foto Kartu Perusahaan" className="w-40 h-40 object-contain rounded border" />
+                                : <div className="w-40 h-40 flex items-center justify-center bg-gray-100 text-gray-400 border rounded">Tidak ada foto</div>
+                            }
+                        </div>
+                    </div>
+                    <div className="mt-6">
+                        <h3 className="font-bold mb-2">Informasi User</h3>
+                        <div>Nama: {selectedUser.name}</div>
+                        <div>Email: {selectedUser.email}</div>
+                        <div>Kontak: {selectedUser.phone || '-'}</div>
+                        <div>Nama Perusahaan: {selectedUser.company_name || '-'}</div>
+                        <div>No. Kartu Identitas Perusahaan: {selectedUser.company_id_card || '-'}</div>
+                    </div>
+                </div>
+            </div>
+        );
     };
 
     return (
@@ -400,12 +445,14 @@ const AdminDashboard = ({ auth, visits, assets, goods, users }) => {
                                                     <div><span className="font-semibold">Kontak:</span> {selectedUser.phone || '-'}</div>
                                                     <div><span className="font-semibold">Nama Perusahaan:</span> {selectedUser.company_name || '-'}</div>
                                                     <div><span className="font-semibold">No. Kartu Identitas Perusahaan:</span> {selectedUser.company_id_card || '-'}</div>
+                                                    <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-semibold" onClick={() => setShowPhotoModal(true)}>
+                                                        Lihat Foto
+                                                    </button>
                                                 </div>
                                                 <div className="flex gap-4">
                                                     {/* Foto Wajah dari BLOB jika ada, fallback ke path lama */}
                                                     {selectedUser.face_photo_blob
-                                                        ? <img src={`data:image/png;base64,${selectedUser.face_photo_blob}`}
-                                                            alt="Foto Wajah" className="w-20 h-20 object-contain rounded" />
+                                                        ? <img src={`data:image/jpeg;base64,${selectedUser.face_photo_blob}`} alt="Foto Wajah" className="w-20 h-20 object-contain rounded" />
                                                         : (selectedUser.face_photo && <img src={selectedUser.face_photo} alt="Foto Wajah" className="w-20 h-20 object-contain rounded" />)
                                                     }
                                                     {/* Foto KTP dan Kartu Perusahaan tetap pakai path lama */}
@@ -414,6 +461,7 @@ const AdminDashboard = ({ auth, visits, assets, goods, users }) => {
                                                 </div>
                                             </div>
                                         </div>
+                                        {showPhotoModal && renderPhotoModal()}
 
                                         {/* Tabel Aset */}
                                         <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-10">
