@@ -165,24 +165,39 @@ const AdminDashboard = ({ auth, visits, assets, goods, users }) => {
                     <div className="flex flex-row gap-6 items-start justify-center">
                         <div className="flex flex-col items-center">
                             <div className="font-semibold mb-1">Foto Wajah</div>
-                            {selectedUser.face_photo_blob
-                                ? <img src={`data:image/jpeg;base64,${selectedUser.face_photo_blob}`} alt="Foto Wajah" className="w-40 h-40 object-contain rounded border" />
-                                : <div className="w-40 h-40 flex items-center justify-center bg-gray-100 text-gray-400 border rounded">Tidak ada foto</div>
-                            }
+                            {selectedUser.face_photo_blob && (
+                                <img
+                                    src={typeof selectedUser.face_photo_blob === 'string'
+                                        ? selectedUser.face_photo_blob
+                                        : URL.createObjectURL(selectedUser.face_photo_blob)}
+                                    alt="Foto Wajah"
+                                    className="w-40 h-40 object-contain rounded border"
+                                />
+                            )}
                         </div>
                         <div className="flex flex-col items-center">
                             <div className="font-semibold mb-1">Foto KTP</div>
-                            {selectedUser.id_card_photo_blob
-                                ? <img src={`data:image/jpeg;base64,${selectedUser.id_card_photo_blob}`} alt="Foto KTP" className="w-40 h-40 object-contain rounded border" />
-                                : <div className="w-40 h-40 flex items-center justify-center bg-gray-100 text-gray-400 border rounded">Tidak ada foto</div>
-                            }
+                            {selectedUser.id_card_photo_blob && (
+                                <img
+                                    src={typeof selectedUser.id_card_photo_blob === 'string'
+                                        ? selectedUser.id_card_photo_blob
+                                        : URL.createObjectURL(selectedUser.id_card_photo_blob)}
+                                    alt="Foto KTP"
+                                    className="w-40 h-40 object-contain rounded border"
+                                />
+                            )}
                         </div>
                         <div className="flex flex-col items-center">
                             <div className="font-semibold mb-1">Foto Kartu Perusahaan</div>
-                            {selectedUser.company_id_card_photo_blob
-                                ? <img src={`data:image/jpeg;base64,${selectedUser.company_id_card_photo_blob}`} alt="Foto Kartu Perusahaan" className="w-40 h-40 object-contain rounded border" />
-                                : <div className="w-40 h-40 flex items-center justify-center bg-gray-100 text-gray-400 border rounded">Tidak ada foto</div>
-                            }
+                            {selectedUser.company_id_card_photo_blob && (
+                                <img
+                                    src={typeof selectedUser.company_id_card_photo_blob === 'string'
+                                        ? selectedUser.company_id_card_photo_blob
+                                        : URL.createObjectURL(selectedUser.company_id_card_photo_blob)}
+                                    alt="Foto Kartu Perusahaan"
+                                    className="w-40 h-40 object-contain rounded border"
+                                />
+                            )}
                         </div>
                     </div>
                     <div className="mt-6">
@@ -452,10 +467,15 @@ const AdminDashboard = ({ auth, visits, assets, goods, users }) => {
                                                 </div>
                                                 <div className="flex gap-4">
                                                     {/* Foto Wajah dari BLOB jika ada, fallback ke path lama */}
-                                                    {selectedUser.face_photo_blob
-                                                        ? <img src={`data:image/jpeg;base64,${selectedUser.face_photo_blob}`} alt="Foto Wajah" className="w-20 h-20 object-contain rounded" />
-                                                        : (selectedUser.face_photo && <img src={selectedUser.face_photo} alt="Foto Wajah" className="w-20 h-20 object-contain rounded" />)
-                                                    }
+                                                    {selectedUser.face_photo_blob && (
+                                                        <img
+                                                            src={typeof selectedUser.face_photo_blob === 'string'
+                                                                ? selectedUser.face_photo_blob
+                                                                : URL.createObjectURL(selectedUser.face_photo_blob)}
+                                                            alt="Foto Wajah"
+                                                            className="w-20 h-20 object-contain rounded"
+                                                        />
+                                                    )}
                                                     {/* Foto KTP dan Kartu Perusahaan tetap pakai path lama */}
                                                     {selectedUser.id_card_photo && <img src={selectedUser.id_card_photo} alt="Foto KTP" className="w-20 h-20 object-contain rounded" />}
                                                     {selectedUser.company_id_card_photo && <img src={selectedUser.company_id_card_photo} alt="Foto Kartu Perusahaan" className="w-20 h-20 object-contain rounded" />}
