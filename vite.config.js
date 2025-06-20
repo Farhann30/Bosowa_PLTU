@@ -11,6 +11,6 @@ export default defineConfig({
         react(),
     ],
     server: {
-        https: true,
+        https: false,
     },
 });
