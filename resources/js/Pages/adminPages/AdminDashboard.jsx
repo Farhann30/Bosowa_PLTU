@@ -330,6 +330,7 @@ const AdminDashboard = ({ auth, visits, assets, goods, users }) => {
                                             <th className="px-3 py-2 border text-left">
                                                 <input type="checkbox" onChange={handleSelectAll} checked={selectedIds.length === filteredVisits.length && filteredVisits.length > 0} />
                                             </th>
+                                                    <th className="px-3 py-2 border text-left">Nama</th>
                                                     <th className="px-3 py-2 border text-left cursor-pointer" onClick={() => handleSort('visit_date')}>
                                                         Tanggal {sortConfig.key === 'visit_date' && (sortConfig.direction === 'asc' ? '▲' : '▼')}
                                                     </th>
@@ -361,51 +362,55 @@ const AdminDashboard = ({ auth, visits, assets, goods, users }) => {
                             </tr>
                         </thead>
                         <tbody>
-                                        {filteredVisits.map(visit => (
-                                            <tr key={visit.id} className="hover:bg-gray-50">
-                                                <td className="px-3 py-2 border">
-                                                    <input type="checkbox" checked={selectedIds.includes(visit.id)} onChange={() => handleSelect(visit.id)} />
-                                                </td>
-                                                <td className="px-3 py-2 border">{formatDate(visit.visit_date)}</td>
-                                                <td className="px-3 py-2 border">
-                                                    {formatTime(visit.visit_time_start)} - {formatTime(visit.visit_time_end)}
-                                                </td>
-                                                <td className="px-3 py-2 border">{visit.building_type}</td>
-                                                <td className="px-3 py-2 border">{visit.building_category}</td>
-                                                <td className="px-3 py-2 border">{visit.agenda}</td>
-                                                <td className="px-3 py-2 border">
-                                                    {visit.pic?.nama || visit.meet_with || '-'}
-                                                </td>
-                                                <td className="px-3 py-2 border">
-                                                    <div className="max-w-xs truncate" title={visit.notes}>
-                                                        {visit.notes || '-'}
-                                                    </div>
-                                                </td>
-                                                <td className="px-3 py-2 border">
-                                                    <div className="flex flex-col">
-                                                        <span>{visit.phone}</span>
-                                                        <span className="text-xs text-gray-500">{visit.email}</span>
-                                                    </div>
-                                                </td>
-                                                <td className="px-3 py-2 border">
-                                                    <span className={`px-2 py-1 rounded-full text-xs ${
-                                                        visit.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                                        visit.status === 'approved' ? 'bg-green-100 text-green-800' :
-                                                        'bg-red-100 text-red-800'
-                                                    }`}>
-                                                        {visit.status}
-                                                    </span>
-                                                </td>
-                                                <td className="px-3 py-2 border">
-                                                    <button
-                                                        className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 text-xs"
-                                                        onClick={() => handleDeleteSelected(visit.id)}
-                                                    >
-                                                        Hapus
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                        {filteredVisits.map(visit => {
+                                            const user = (users || []).find(u => u.id === visit.user_id);
+                                            return (
+                                                <tr key={visit.id} className="hover:bg-gray-50">
+                                                    <td className="px-3 py-2 border">
+                                                        <input type="checkbox" checked={selectedIds.includes(visit.id)} onChange={() => handleSelect(visit.id)} />
+                                                    </td>
+                                                    <td className="px-3 py-2 border">{user ? user.name : '-'}</td>
+                                                    <td className="px-3 py-2 border">{formatDate(visit.visit_date)}</td>
+                                                    <td className="px-3 py-2 border">
+                                                        {formatTime(visit.visit_time_start)} - {formatTime(visit.visit_time_end)}
+                                                    </td>
+                                                    <td className="px-3 py-2 border">{visit.building_type}</td>
+                                                    <td className="px-3 py-2 border">{visit.building_category}</td>
+                                                    <td className="px-3 py-2 border">{visit.agenda}</td>
+                                                    <td className="px-3 py-2 border">
+                                                        {visit.pic?.nama || visit.meet_with || '-'}
+                                                    </td>
+                                                    <td className="px-3 py-2 border">
+                                                        <div className="max-w-xs truncate" title={visit.notes}>
+                                                            {visit.notes || '-'}
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-3 py-2 border">
+                                                        <div className="flex flex-col">
+                                                            <span>{visit.phone}</span>
+                                                            <span className="text-xs text-gray-500">{visit.email}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-3 py-2 border">
+                                                        <span className={`px-2 py-1 rounded-full text-xs ${
+                                                            visit.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                                            visit.status === 'approved' ? 'bg-green-100 text-green-800' :
+                                                            'bg-red-100 text-red-800'
+                                                        }`}>
+                                                            {visit.status}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-3 py-2 border">
+                                                        <button
+                                                            className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 text-xs"
+                                                            onClick={() => handleDeleteSelected(visit.id)}
+                                                        >
+                                                            Hapus
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
                         </tbody>
                     </table>
                 </div>
