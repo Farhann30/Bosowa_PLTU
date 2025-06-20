@@ -32,7 +32,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="{{ asset('images/Logo bosowa.png') }}" alt="Bosowa Logo" style="height: 50px;">
+            <img src="{{ asset('images/Logo bosowa BG.png') }}" alt="Bosowa Logo" style="height: 50px;">
         </div>
 
         <div class="content">
