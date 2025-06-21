@@ -44,7 +44,7 @@ class RegisteredUserController extends Controller
             'company_id_card_photo' => 'nullable|image|max:2048',
         ]);
 
-        // Simpan file ke kolom BLOB
+        // Simpan file
         $facePhotoBlob = file_get_contents($request->file('face_photo')->getRealPath());
         $idCardPhotoBlob = file_get_contents($request->file('id_card_photo')->getRealPath());
         $companyIdCardPhotoBlob = null;
