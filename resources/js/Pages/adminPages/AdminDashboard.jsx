@@ -1,22 +1,30 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import AdminLayout from '@/Layouts/AdminLayout';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import * as XLSX from 'xlsx';
 import { Inertia } from '@inertiajs/inertia';
 
 // Register chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const AdminDashboard = ({ auth, visits, assets, goods, users }) => {
+const AdminDashboard = ({ auth, visits, assets, goods, users, selectedUser: initialSelectedUser }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedIds, setSelectedIds] = useState([]);
     const [sortConfig, setSortConfig] = useState({ key: 'visit_date', direction: 'desc' });
     const [searchUser, setSearchUser] = useState('');
-    const [selectedUser, setSelectedUser] = useState(null);
-    const [page, setPage] = useState('kunjungan'); // 'kunjungan' | 'user'
+    const [selectedUser, setSelectedUser] = useState(initialSelectedUser);
+    const [page, setPage] = useState(initialSelectedUser ? 'user' : 'kunjungan');
     const [showPhotoModal, setShowPhotoModal] = useState(false);
+
+    useEffect(() => {
+        setSelectedUser(initialSelectedUser);
+        if (initialSelectedUser) {
+            const userIdentifier = `${initialSelectedUser.name} (${initialSelectedUser.email})`;
+            setSearchUser(userIdentifier);
+        }
+    }, [initialSelectedUser]);
 
     // Menyaring data kunjungan berdasarkan status
     const pendingVisits = visits.filter(visit => visit.status === "pending");
@@ -95,7 +103,9 @@ const AdminDashboard = ({ auth, visits, assets, goods, users }) => {
     const filteredVisits = useMemo(() => {
         let data = visits.filter(visit => {
             const searchLower = searchTerm.toLowerCase();
+            const visitUser = users.find(u => u.id === visit.user_id);
             return (
+                (visitUser?.name.toLowerCase() || '').includes(searchLower) ||
                 (visit.meet_with || '').toLowerCase().includes(searchLower) ||
                 (visit.phone || '').toLowerCase().includes(searchLower) ||
                 (visit.email || '').toLowerCase().includes(searchLower) ||
@@ -126,7 +136,7 @@ const AdminDashboard = ({ auth, visits, assets, goods, users }) => {
             });
         }
         return data;
-    }, [visits, searchTerm, sortConfig]);
+    }, [visits, searchTerm, sortConfig, users]);
 
     // Filter aset & barang keluar berdasarkan user yang dipilih
     const filteredAssets = selectedUser ? (assets || []).filter(a => a.user_id === selectedUser.id) : [];
@@ -165,39 +175,33 @@ const AdminDashboard = ({ auth, visits, assets, goods, users }) => {
                     <div className="flex flex-row gap-6 items-start justify-center">
                         <div className="flex flex-col items-center">
                             <div className="font-semibold mb-1">Foto Wajah</div>
-                            {selectedUser.face_photo_blob && (
+                            {selectedUser.face_photo_blob ? (
                                 <img
-                                    src={typeof selectedUser.face_photo_blob === 'string'
-                                        ? selectedUser.face_photo_blob
-                                        : URL.createObjectURL(selectedUser.face_photo_blob)}
+                                    src={selectedUser.face_photo_blob}
                                     alt="Foto Wajah"
                                     className="w-40 h-40 object-contain rounded border"
                                 />
-                            )}
+                            ) : <div className="w-40 h-40 flex items-center justify-center bg-gray-100 rounded border text-gray-400">Tidak Ada Foto</div>}
                         </div>
                         <div className="flex flex-col items-center">
                             <div className="font-semibold mb-1">Foto KTP</div>
-                            {selectedUser.id_card_photo_blob && (
+                            {selectedUser.id_card_photo_blob ? (
                                 <img
-                                    src={typeof selectedUser.id_card_photo_blob === 'string'
-                                        ? selectedUser.id_card_photo_blob
-                                        : URL.createObjectURL(selectedUser.id_card_photo_blob)}
+                                    src={selectedUser.id_card_photo_blob}
                                     alt="Foto KTP"
                                     className="w-40 h-40 object-contain rounded border"
                                 />
-                            )}
+                            ) : <div className="w-40 h-40 flex items-center justify-center bg-gray-100 rounded border text-gray-400">Tidak Ada Foto</div>}
                         </div>
                         <div className="flex flex-col items-center">
                             <div className="font-semibold mb-1">Foto Kartu Perusahaan</div>
-                            {selectedUser.company_id_card_photo_blob && (
+                            {selectedUser.company_id_card_photo_blob ? (
                                 <img
-                                    src={typeof selectedUser.company_id_card_photo_blob === 'string'
-                                        ? selectedUser.company_id_card_photo_blob
-                                        : URL.createObjectURL(selectedUser.company_id_card_photo_blob)}
+                                    src={selectedUser.company_id_card_photo_blob}
                                     alt="Foto Kartu Perusahaan"
                                     className="w-40 h-40 object-contain rounded border"
                                 />
-                            )}
+                            ) : <div className="w-40 h-40 flex items-center justify-center bg-gray-100 rounded border text-gray-400">Tidak Ada Foto</div>}
                         </div>
                     </div>
                     <div className="mt-6">
@@ -232,7 +236,14 @@ const AdminDashboard = ({ auth, visits, assets, goods, users }) => {
                                 </button>
                                 <button
                                     className={`px-4 py-2 rounded font-semibold transition ${page === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-                                    onClick={() => setPage('user')}
+                                    onClick={() => {
+                                        setPage('user');
+                                        if (!selectedUser) {
+                                            setSearchUser('');
+                                            setSelectedUser(null);
+                                            router.get(route('admin.dashboard'));
+                                        }
+                                    }}
                                 >
                                     Pilih User
                                 </button>
@@ -363,7 +374,7 @@ const AdminDashboard = ({ auth, visits, assets, goods, users }) => {
                         </thead>
                         <tbody>
                                         {filteredVisits.map(visit => {
-                                            const user = (users || []).find(u => u.id === visit.user_id);
+                                            const user = users.find(u => u.id === visit.user_id);
                                             return (
                                                 <tr key={visit.id} className="hover:bg-gray-50">
                                                     <td className="px-3 py-2 border">
@@ -446,10 +457,17 @@ const AdminDashboard = ({ auth, visits, assets, goods, users }) => {
                                             const found = (users || []).find(u =>
                                                 (u.name + ' (' + u.email + ')') === searchUser
                                             );
-                                            setSelectedUser(found || null);
+                                            if (found) {
+                                                router.get(route('admin.dashboard', { user_id: found.id }), {}, {
+                                                    preserveState: true,
+                                                    preserveScroll: true,
+                                                });
+                                            } else {
+                                                alert('User tidak ditemukan. Silakan pilih dari daftar.');
+                                            }
                                         }}
                                     >
-                                        Pilih User
+                                        Lihat Detail User
                                     </button>
                                 </div>
 
@@ -470,20 +488,40 @@ const AdminDashboard = ({ auth, visits, assets, goods, users }) => {
                                                         Lihat Foto
                                                     </button>
                                                 </div>
-                                                <div className="flex gap-4">
-                                                    {/* Foto Wajah dari BLOB jika ada, fallback ke path lama */}
-                                                    {selectedUser.face_photo_blob && (
-                                                        <img
-                                                            src={typeof selectedUser.face_photo_blob === 'string'
-                                                                ? selectedUser.face_photo_blob
-                                                                : URL.createObjectURL(selectedUser.face_photo_blob)}
-                                                            alt="Foto Wajah"
-                                                            className="w-20 h-20 object-contain rounded"
-                                                        />
-                                                    )}
-                                                    {/* Foto KTP dan Kartu Perusahaan tetap pakai path lama */}
-                                                    {selectedUser.id_card_photo && <img src={selectedUser.id_card_photo} alt="Foto KTP" className="w-20 h-20 object-contain rounded" />}
-                                                    {selectedUser.company_id_card_photo && <img src={selectedUser.company_id_card_photo} alt="Foto Kartu Perusahaan" className="w-20 h-20 object-contain rounded" />}
+                                                <div className="flex gap-4 items-center justify-start">
+                                                    {/* Foto Wajah */}
+                                                    <div className="flex flex-col items-center">
+                                                        <span className="text-sm font-semibold">Wajah</span>
+                                                        {selectedUser.face_photo_blob ? (
+                                                            <img
+                                                                src={selectedUser.face_photo_blob}
+                                                                alt="Foto Wajah"
+                                                                className="w-20 h-20 object-contain rounded border"
+                                                            />
+                                                        ) : <div className="w-20 h-20 bg-gray-100 rounded border" />}
+                                                    </div>
+                                                    {/* Foto KTP */}
+                                                     <div className="flex flex-col items-center">
+                                                        <span className="text-sm font-semibold">KTP</span>
+                                                        {selectedUser.id_card_photo_blob ? (
+                                                            <img
+                                                                src={selectedUser.id_card_photo_blob}
+                                                                alt="Foto KTP"
+                                                                className="w-20 h-20 object-contain rounded border"
+                                                            />
+                                                        ) : <div className="w-20 h-20 bg-gray-100 rounded border" />}
+                                                    </div>
+                                                    {/* Foto Kartu Perusahaan */}
+                                                    <div className="flex flex-col items-center">
+                                                        <span className="text-sm font-semibold">ID Card</span>
+                                                        {selectedUser.company_id_card_photo_blob ? (
+                                                            <img
+                                                                src={selectedUser.company_id_card_photo_blob}
+                                                                alt="Foto Kartu Perusahaan"
+                                                                className="w-20 h-20 object-contain rounded border"
+                                                            />
+                                                         ) : <div className="w-20 h-20 bg-gray-100 rounded border" />}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
