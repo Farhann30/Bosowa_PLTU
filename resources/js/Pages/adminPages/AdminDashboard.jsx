@@ -23,6 +23,7 @@ const AdminDashboard = ({ auth, visits, assets, goods, users, selectedUser: init
         if (initialSelectedUser) {
             const userIdentifier = `${initialSelectedUser.name} (${initialSelectedUser.email})`;
             setSearchUser(userIdentifier);
+            setPage('user');
         }
     }, [initialSelectedUser]);
 
