@@ -48,7 +48,7 @@
                 <h2>Kunjungan Ditolak</h2>
                 <p>Halo {{ $visit->visitor_name }},</p>
                 <p>Mohon maaf, kunjungan Anda telah ditolak oleh {{ $visit->pic->name }}:</p>
-            @endif
+            @endifumay
 
             <div style="margin: 20px 0;">
                 <p><strong>Detail Kunjungan:</strong></p>

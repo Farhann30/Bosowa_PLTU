@@ -6,6 +6,7 @@ import InputError from '@/Components/InputError';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { FaUpload } from 'react-icons/fa';
+import imageCompression from 'browser-image-compression';
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -38,13 +39,29 @@ export default function Register() {
         };
     }, []);
 
-    const handleFileChange = (e, field) => {
+    const handleFileChange = async (e, field) => {
         const file = e.target.files[0];
-        setData(field, file);
-        if (file) {
-            setPreview((prev) => ({ ...prev, [field]: URL.createObjectURL(file) }));
-        } else {
+        if (!file) {
+            setData(field, null);
             setPreview((prev) => ({ ...prev, [field]: null }));
+            return;
+        }
+
+        const options = {
+            maxSizeMB: 1, // Kompres gambar agar ukurannya di bawah 1MB
+            maxWidthOrHeight: 1920, // Ubah resolusi jika terlalu besar
+            useWebWorker: true,
+        };
+
+        try {
+            const compressedFile = await imageCompression(file, options);
+            setData(field, compressedFile);
+            setPreview((prev) => ({ ...prev, [field]: URL.createObjectURL(compressedFile) }));
+        } catch (error) {
+            console.error('Gagal melakukan kompresi gambar:', error);
+            // Jika gagal, gunakan file asli
+            setData(field, file);
+            setPreview((prev) => ({ ...prev, [field]: URL.createObjectURL(file) }));
         }
     };
 
