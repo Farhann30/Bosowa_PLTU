@@ -83,6 +83,9 @@ export default function Register() {
 
     const submit = (e) => {
         e.preventDefault();
+        console.log('face_photo:', data.face_photo);
+        console.log('id_card_photo:', data.id_card_photo);
+        console.log('company_id_card_photo:', data.company_id_card_photo);
         post(route('register'));
     };
 
