@@ -86,7 +86,11 @@ export default function Register() {
         console.log('face_photo:', data.face_photo);
         console.log('id_card_photo:', data.id_card_photo);
         console.log('company_id_card_photo:', data.company_id_card_photo);
-        post(route('register'));
+        post(route('register'), {
+            onError: () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
     };
 
     // STEP 1: Data Diri
@@ -290,6 +294,14 @@ export default function Register() {
     // STEP 3: Ketentuan & Password
     const renderStep3 = () => (
         <>
+            {/* ALERT GLOBAL ERROR */}
+            {Object.keys(errors).length > 0 && (
+                <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg font-semibold animate-pulse">
+                    {Object.values(errors).map((err, idx) => (
+                        <div key={idx}>{err}</div>
+                    ))}
+                </div>
+            )}
             <div className="space-y-4">
                 <h2 className="text-lg font-bold">Syarat & Ketentuan</h2>
                 <ul className="list-disc pl-6 text-sm text-gray-700">
