@@ -237,14 +237,7 @@ const AdminDashboard = ({ auth, visits, assets, goods, users, selectedUser: init
                                 </button>
                                 <button
                                     className={`px-4 py-2 rounded font-semibold transition ${page === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-                                    onClick={() => {
-                                        setPage('user');
-                                        if (!selectedUser) {
-                                            setSearchUser('');
-                                            setSelectedUser(null);
-                                            router.get(route('admin.dashboard'));
-                                        }
-                                    }}
+                                    onClick={() => setPage('user')}
                                 >
                                     Pilih User
                                 </button>
